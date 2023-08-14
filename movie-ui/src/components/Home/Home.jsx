@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Navbar from '../Navbar/Navbar';
 import SearchPanel from '../SearchPannel/SearchPannel';
+import MovieCard from '../MovieCard/MovieCard'
 // import { Banner } from "../Banner/Banner";
 // import { MovieCard } from "../MovieCard/MovieCard";
 // import { SearchPanel } from "../SearchPanel/SearchPanel";
@@ -45,6 +46,21 @@ export function Home() {
                     </p>
                 </div>
                 <SearchPanel/>
+                <div className="row">
+                {
+                    movies.map(m=>
+                        <div key={m._id} className="col-md-3">
+                           <Link to={`movie/${m._id}`}>
+                                <MovieCard key={m._id} movie={m} />
+                            </Link>
+                        </div>
+                        
+                        
+                        )
+                }
+               
+               
+            </div>
             </div>
         </>
 

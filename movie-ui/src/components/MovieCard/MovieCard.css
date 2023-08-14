@@ -1,0 +1,10 @@
+.card{
+    margin: 18px 12px;
+}
+
+.ratings{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}

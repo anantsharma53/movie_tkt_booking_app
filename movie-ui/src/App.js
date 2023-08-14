@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { Provider } from 'react-redux';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Navbar from './components/Navbar/Navbar';
+import Home from './components/Home/Home';
 import Navbar from './';
 
 
@@ -12,7 +12,7 @@ function App() {
       {/* <Provider store={store}> */}
         <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Navbar/>}/>
+          <Route path='/' element={<Home/>}/>
         </Routes>
         </BrowserRouter>
         {/* </Provider> */}

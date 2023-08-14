@@ -1,6 +1,7 @@
 
 .navbar-bg{
-    background-color: #0a1e5e !important;
+    /* background-color: #0a1e5e !important; */
+    background: linear-gradient(to right, #ee7724, #d8363a, #d8363a, #ee7724);
     height: 80px;
    
 }

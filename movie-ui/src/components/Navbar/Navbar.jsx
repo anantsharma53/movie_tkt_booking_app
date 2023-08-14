@@ -1,11 +1,16 @@
 import './Navbar.css'
 
-export function Navbar() {
+ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-bg">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          <img src="https://pixner.net/boleto/demo/assets/images/logo/logo.png"></img>
+          <img src="
+          https://w7.pngwing.com/pngs/1011/407/png-transparent-movies-logo-the-film-television-logo.png
+          "
+          style={{height:'60px',width:'200px'}}
+          alt="Movies Logo"
+          ></img>
         </a>
         <button
           className="navbar-toggler"

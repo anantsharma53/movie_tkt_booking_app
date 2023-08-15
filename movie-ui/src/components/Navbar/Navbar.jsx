@@ -1,5 +1,6 @@
 import './Navbar.css'
 
+import { Link } from 'react-router-dom';
  function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-bg">
@@ -31,9 +32,9 @@ import './Navbar.css'
               </a>
             </li>
           </ul>
-          <a className="btn btn-primary float-end" href="signin">
+          <Link to ='/signin'className="btn btn-primary float-end" >
             Join Us
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

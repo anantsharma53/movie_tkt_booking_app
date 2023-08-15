@@ -1,8 +1,63 @@
-
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./SignIn.css";
 
 export function Signin(){
+    let navigate = useNavigate();
+  //const dispatch=useDispatch();
+  let location = useLocation();
+
+  //const[userName,setUserName]=useState([]);
+
+  console.log(location.pathname);
+  const [user, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+  function handleSubmit() {
+
+    fetch("http://127.0.0.1:8000/api/user/signin/", {
+      method: "POST",
+      body: JSON.stringify(user),
+      headers: {
+        "Content-Type": "application/json",
+
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json(); // Parse response as JSON
+        } else if (res.status === 400) {
+          console.log("Unauthorized request");
+          alert("Login Error");
+          throw new Error("Unauthorized request");
+        } else {
+          console.log("Something went wrong");
+          throw new Error("Something went wrong");
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        const { user, access } = data;
+        localStorage.setItem("token", data.access); 
+        localStorage.setItem("tokenExpiration", data.access);
+        localStorage.setItem("user_details",JSON.stringify(user));
+        alert("Sucess");
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        alert("Check your Username Or Password");
+        console.log(err);
+      });
+  }
+  function handleChange(e) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setFormData({ ...user, [name]: value });
+    console.log(user);
+  }
+
 
     return(
 
@@ -12,23 +67,19 @@ export function Signin(){
                 <h2 className="welcomeSubText">Login Details</h2>
                 <div className="mb-3 form-control-group">
                     <label className="form-label">
-                        Email
+                        Username
                     </label>
-                    <input 
-                    placeholder="Enter your Email"
-                    type="email" name="email" className="form-control">
-
-                    </input>
+                    <input type="email" id="username" className="form-control"
+                          placeholder="username" name="username"  onChange={handleChange} value={user.username} />
+                   
                 </div>
                 <div className="mb-3 form-control-group">
                     <label className="form-label">
                         Password
                     </label>
-                    <input 
-                      placeholder="Password"
-                    type="password" name="password" className="form-control">
-
-                    </input>
+                    <input type="password" placeholder="password"name="password" id="password" onChange={handleChange} value={user.password} className="form-control" />
+                
+                    
                 </div>
 
                 <div className="linkWrapper mb-3">
@@ -43,9 +94,9 @@ export function Signin(){
                     </a>
                 </div>
                 <div className="btn-wrapper">
-                <button className="btn btn-primary mb-3">
-                    Sign In
-                </button>
+                <button className="btn btn-primary mb-3" type="button" onClick={handleSubmit}>
+                Sign In</button>
+                
 
                 </div>
                 

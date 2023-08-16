@@ -65,13 +65,28 @@ class UserUpdatView(APIView):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
 class AddMovieAPIView(APIView):
+    permission_classes=[IsAuthenticated]
     def post(self, request):
         serializer = MovieSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+class GetMovieViews(APIView):
+    permission_classes=[IsAuthenticated]    
+    def get(self, request):
+        page_number =request.GET.get('page',1)
+        movies=Movie.objects.all().order_by("id")
+        paginator = Paginator(movies, 5)
+        page = paginator.get_page(page_number)
+        users_on_page = page.object_list
+        user_serialized = MovieSerializer(users_on_page, many=True).data
+        return JsonResponse({
+        'results': user_serialized, 
+        'num_pages': paginator.num_pages, 
+        "total_user": movies.count()})
+    
 class AddMovieToTheaterAPIView(APIView):
     def post(self, request, *args, **kwargs):
         movie_serializer = MovieSerializer(data=request.data.get('movie'))

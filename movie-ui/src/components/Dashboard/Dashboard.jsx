@@ -8,14 +8,14 @@ function Dashboard() {
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
     const token = localStorage.getItem('token')
-    const [users, setUsers] = useState([]);
+    const [movie, setMovie] = useState([]);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [showModal, setShowModal] = useState(false);
-    // Function to fetch User List from the API
-    function userList(pageNumber) {
-        fetch(`http://127.0.0.1:8000/api/userlist/?page=${pageNumber}`,
+    // Function to fetch movie list List from the API
+    function movieList(pageNumber) {
+        fetch(`http://127.0.0.1:8000/api/movies/list?page=${pageNumber}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,7 +27,8 @@ function Dashboard() {
             .then((res) => res.json())
             .then((jsonResponse) => {
                 const resultsArray = jsonResponse.results;
-                setUsers(resultsArray);
+                console.log(resultsArray)
+                setMovie(resultsArray);
                 const numPages = jsonResponse.num_pages;
                 setTotalPages(numPages);
                 // const resultsArray = jsonResponse.results.results;
@@ -41,6 +42,9 @@ function Dashboard() {
             });
     }
 
+
+
+
     function handlePageChange(pageNumber) {
         setCurrentPage(pageNumber);
         localStorage.setItem("currentPage", pageNumber);
@@ -48,10 +52,10 @@ function Dashboard() {
     useEffect(() => {
         const storedPage = localStorage.getItem("currentPage");
         setCurrentPage(storedPage ? parseInt(storedPage) : 1);
-        userList(currentPage);
+        movieList(currentPage);
     }, [currentPage]);
 
-
+    console.log(movie);
 
     const openModal = () => {
         setShowModal(true);
@@ -64,20 +68,35 @@ function Dashboard() {
     return (
         <>
             <Navbar />
-            <div className="dashboardContainer">
-            <div>
+            <div className="buttonContainer">
+            <button type="button" className="openModalBtn" onClick={openModal}>
+                        Upload Movie
+                    </button>
                     <button type="button" className="openModalBtn" onClick={openModal}>
                         Upload Movie
                     </button>
+                    <button type="button" className="openModalBtn" onClick={openModal}>
+                        Upload Movie
+                    </button>
+                    <button type="button" className="openModalBtn" onClick={openModal}>
+                        Upload Movie
+                    </button>
+            
+            
+            </div>
+            <div className="dashboardContainer">
+            
                     
-                </div>
+                    
+                
                 <div className="userDetail">
                     <h2 className="welcomeText">Your Profile Details</h2>
                     <h2 className="welcomeUserText">Name: {user.name}</h2>
                     <h2 className="welcomeUserText">Username: {user.username}</h2>
                     <h2 className="welcomeUserText">Email: {user.email}</h2>
                     <h2 className="welcomeUserText">Mobile Number: {user.mobile_number}</h2>
-                </div>              
+                </div>
+                <div>             
                 {isSuperUser &&
                     (<div class="container mt-5 table">
                         <div class="row ">
@@ -87,29 +106,36 @@ function Dashboard() {
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><span>Sl No</span></th>
+                                                <th class="text-center"><span>ID </span></th>
                                                 <th class="text-center"><span>Name</span></th>
-                                                <th class="text-center"><span>User Name</span></th>
-                                                <th class="text-center"><span>Email</span></th>
-                                                <th class="text-center"><span>Mobile number</span></th>
+                                                <th class="text-center"><span>Director</span></th>
+                                                <th class="text-center"><span>Category(genre)</span></th>
+                                                <th class="text-center"><span>Language</span></th>
+                                                <th class="text-center"><span>Rating</span></th>
+                                                <th class="text-center"><span>Duration in mins</span></th>
+                                                <th class="text-center"><span>Poster</span></th>
                                                 <th class="text-center"><span>Actions</span></th>
                                             </tr>
                                         </thead>
-
                                         <tbody>
-                                            {users
+                                            {movie
                                                 &&
-                                                users.map((user, index) => (
+                                                movie.map((movies, index) => (
+                                                    
                                                     <tr key={index}>
                                                         <td>{index + 1}</td>
+                                                        <td>{movies.id}</td>
+                                                        <td>{movies.title}</td>
+                                                        <td>{movies.director}</td>
+                                                        <td>{movies.genre}</td>
+                                                        <td>{movies.language}</td>
+                                                        <td>{movies.rating}</td>
+                                                        <td>{movies.movie_length}</td>
                                                         <td>
-                                                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
-                                                            <a href="#" class="user-link">{user.name}</a>
+                                                            <img src={movies.image} alt="" />
+                                                            
                                                         </td>
-                                                        <td class="text-center">{user.username}</td>
-                                                        <td class="text-center">
-                                                            <a href="#">{user.email}</a>
-                                                        </td>
-                                                        <td>{user.mobile_number}</td>
+                                                        
                                                         {
                                                             user.is_superuser === true ? <td>Supar Admin</td> :
                                                                 <td style={{ width: '20%' }}>
@@ -192,6 +218,7 @@ function Dashboard() {
                         </div>
                     </div>)
                 }
+                </div> 
 
 {showModal && <MovieUpload setShowModal={setShowModal} />}
 

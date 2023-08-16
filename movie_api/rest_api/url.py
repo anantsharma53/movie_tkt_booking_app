@@ -6,4 +6,5 @@ urlpatterns=[
     path('user/signup/',csrf_exempt(SignUpView.as_view()),name='user-signup'),
     path('user/signin/',csrf_exempt(SignInView.as_view()),name='user-login'),
     path('movies/add',csrf_exempt(AddMovieAPIView.as_view()),name='add-movie'),
+    path('movies/list/',csrf_exempt(GetMovieViews.as_view()),name='list-movie'),
 ]

@@ -9,7 +9,7 @@
   } */
   .modalBackground{
     width: 100vw;
-    height: 70vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     position: fixed;
@@ -20,13 +20,14 @@
 } 
   .modalContainer {
     width: 500px;
-    height: 500px;
+    height:600px;
     border-radius: 12px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     display: flex;
     flex-direction: column;
-    padding: 25px;
+    padding: 5px;
+    
   }
   
   .modalContainer .title {
@@ -99,3 +100,7 @@
   #cancelBtn {
     background-color: crimson;
   }
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  color: #000 !important; /* Set the desired text color */
+}

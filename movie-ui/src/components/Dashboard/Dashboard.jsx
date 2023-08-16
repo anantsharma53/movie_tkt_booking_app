@@ -3,6 +3,7 @@ import { useState } from "react";
 import './Dashboard.css'
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import MovieUpload from "../MovieUpload/MovieUpload";
 function Dashboard() {
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
@@ -11,6 +12,7 @@ function Dashboard() {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [showModal, setShowModal] = useState(false);
     // Function to fetch User List from the API
     function userList(pageNumber) {
         fetch(`http://127.0.0.1:8000/api/userlist/?page=${pageNumber}`,
@@ -48,22 +50,37 @@ function Dashboard() {
         setCurrentPage(storedPage ? parseInt(storedPage) : 1);
         userList(currentPage);
     }, [currentPage]);
-   
+
+
+
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
 
     return (
         <>
-        <Navbar/>
-        <div className="dashboardContainer">
-        <div className="userDetail">
-                <h2 className="welcomeText">HELLO</h2>
-                <h2 className="welcomeSubText">{user.name}</h2>
-        </div>
-            
-            
-                {isSuperUser ?
+            <Navbar />
+            <div className="dashboardContainer">
+            <div>
+                    <button type="button" className="openModalBtn" onClick={openModal}>
+                        Upload Movie
+                    </button>
+                    
+                </div>
+                <div className="userDetail">
+                    <h2 className="welcomeText">Your Profile Details</h2>
+                    <h2 className="welcomeUserText">Name: {user.name}</h2>
+                    <h2 className="welcomeUserText">Username: {user.username}</h2>
+                    <h2 className="welcomeUserText">Email: {user.email}</h2>
+                    <h2 className="welcomeUserText">Mobile Number: {user.mobile_number}</h2>
+                </div>              
+                {isSuperUser &&
                     (<div class="container mt-5 table">
                         <div class="row ">
-
                             <div class="main-box clearfix ">
                                 <div class="table-responsive">
                                     <table class="table user-list">
@@ -124,62 +141,63 @@ function Dashboard() {
 
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="pagination-container">
-                                    <ul class="pagination ">
-                                        <li class="page-item ">
-                                            {
-                                                currentPage>1?<button
-                                                    className="page-link"
-                                                    onClick={() => handlePageChange(currentPage - 1)}
-                                                >
-                                                    Previous
-                                                </button>:
-                                                <button
-                                                className="page-link disabled"
-                                                
-                                            >
-                                                Previous
-                                            </button>
-                                            }
-                                        </li>
-                                        {/* <li><a href="#"><i class="fa fa-chevron-left"></i></a></li> */}
-                                        {Array.from({ length: totalPages }, (_, index) => (
-                                            <li class="page-item"
-                                                key={index + 1}
-                                                onClick={() => handlePageChange(index + 1)}
-                                                disabled={currentPage === index + 1}
-                                            >
-                                                <button class="page-link">{index + 1}</button>
+
+                                    <div class="pagination-container">
+                                        <ul class="pagination ">
+                                            <li class="page-item ">
+                                                {
+                                                    currentPage > 1 ? <button
+                                                        className="page-link"
+                                                        onClick={() => handlePageChange(currentPage - 1)}
+                                                    >
+                                                        Previous
+                                                    </button> :
+                                                        <button
+                                                            className="page-link disabled"
+
+                                                        >
+                                                            Previous
+                                                        </button>
+                                                }
                                             </li>
-                                        ))}
-                                        <li class="page-item ">
-                                        {
-                                                currentPage<totalPages?<button
-                                                    className="page-link"
-                                                    onClick={() => handlePageChange(currentPage + 1)}
+                                            {/* <li><a href="#"><i class="fa fa-chevron-left"></i></a></li> */}
+                                            {Array.from({ length: totalPages }, (_, index) => (
+                                                <li class="page-item"
+                                                    key={index + 1}
+                                                    onClick={() => handlePageChange(index + 1)}
+                                                    disabled={currentPage === index + 1}
                                                 >
-                                                    Next
-                                                </button>:
-                                                <button className="page-link disabled" >                                                                
-                                                Next
-                                            </button>
-                                            }
-                                        </li>
-                                       
-                                    </ul>
+                                                    <button class="page-link">{index + 1}</button>
+                                                </li>
+                                            ))}
+                                            <li class="page-item ">
+                                                {
+                                                    currentPage < totalPages ? <button
+                                                        className="page-link"
+                                                        onClick={() => handlePageChange(currentPage + 1)}
+                                                    >
+                                                        Next
+                                                    </button> :
+                                                        <button className="page-link disabled" >
+                                                            Next
+                                                        </button>
+                                                }
+                                            </li>
+
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
-                    </div>) : (<></>)
+                    </div>)
                 }
-            
 
+{showModal && <MovieUpload setShowModal={setShowModal} />}
 
             </div>
 
-            
+
         </>
 
     );

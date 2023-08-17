@@ -116,7 +116,16 @@ class MoviesAPI(View):
         movie_serialized = MovieSerializer(movies, many=True).data
 
         return JsonResponse( movie_serialized, status=200, safe=False)
-   
+    
+class GenreList(APIView):
+    def get(self, request, format=None):
+        # Query unique genres from the Movie model
+        unique_genres = Movie.objects.values_list('genre', flat=True).distinct()
+        # Convert the QuerySet to a list
+        genre_list = list(unique_genres)
+        return JsonResponse(genre_list, status=status.HTTP_200_OK, safe=False)  
+
+
 class AddMovieToTheaterAPIView(APIView):
     def post(self, request, *args, **kwargs):
         movie_serializer = MovieSerializer(data=request.data.get('movie'))

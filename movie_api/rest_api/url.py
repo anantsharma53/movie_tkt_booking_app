@@ -8,4 +8,5 @@ urlpatterns=[
     path('movies/add',csrf_exempt(AddMovieAPIView.as_view()),name='add-movie'),
     path('movies/list/',csrf_exempt(GetMovieViews.as_view()),name='list-movie'),
     path('movies/all/',csrf_exempt(MoviesAPI.as_view()),name='list-movie'),
+    path('movies/genres/', GenreList.as_view(), name='genre-list'),
 ]

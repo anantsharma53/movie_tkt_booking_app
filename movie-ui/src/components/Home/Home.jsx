@@ -10,21 +10,51 @@ import { Link } from "react-router-dom";
 
 import './Home.css'
 export function Home() {
-
+   
     const [movies, setMovies] = useState([]);
+    const [searchName, setSearchName] = useState('');
+    const [searchGenre, setSearchGenre] = useState('');
+    const [searchLanguage, setSearchLanguage] = useState('');    
+    
+
 
     useEffect(() => {
+        const baseUrl = 'http://127.0.0.1:8000/api/movies/all/';
+        const queryParams = {
+          genre: searchGenre, 
+          language: searchLanguage,
+          title:searchName,
+          
+        };
+    
+        // Construct the URL with query parameters only if they are provided
+        const url = new URL(baseUrl);
+        Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
+    
+        // Make the API request using fetch
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            setMovies(data);
+          })
+          .catch(error => {
+            console.error('Error fetching movies:', error);
+          });
+      }, [searchName, searchGenre, searchLanguage]);
+      
+      const handleGenreChange=(value)=>{
+        setSearchGenre(value)
+      } 
+      const handleLanguageChange=(value)=>{
+        setSearchLanguage(value)
+      } 
+      const handleNameChange=(value)=>{
+        setSearchName(value)
+        
+      } 
 
-        // fetch("url", cb);
-
-        fetch("http://localhost:4000/api/movie")
-            .then((res) => res.json())
-            .then(movies => {
-                // ? ThreadPool, MainThread ?
-                setMovies(movies);
-            }).catch(err => { })
-    }, [])
-
+    
+      console.log(searchName)
     return (
         <>
             <Navbar />
@@ -45,7 +75,13 @@ export function Home() {
                         read movie reviews and much more
                     </p>
                 </div>
-                <SearchPanel/>
+                {<SearchPanel
+                    onNameChange={handleNameChange}
+                    onLanguageChange={handleLanguageChange}
+                    onGenreChange={handleGenreChange}
+                
+
+                />}
                 <div className="row">
                 {
                     movies.map(m=>

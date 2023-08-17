@@ -87,6 +87,36 @@ class GetMovieViews(APIView):
         'num_pages': paginator.num_pages, 
         "total_user": movies.count()})
     
+class MoviesAPI(View):
+    def get(self, request):
+        # Implement fetching all movies with optional filtering based on genre, language, location, and rating
+        genre = request.GET.get('genre')
+        language = request.GET.get('language')
+        location = request.GET.get('location')
+        title = request.GET.get('title')
+        rating=request.GET.get('rating')
+
+        movies = Movie.objects.all()
+       
+        if title:
+            movies = movies.filter(title__icontains=title)
+
+        if genre:
+            movies = movies.filter(genre=genre)
+
+        if language:
+            movies = movies.filter(language=language)
+
+        if location:
+            # Apply location filtering logic here if you have it as a field in the Movie model
+            pass
+
+        if rating:
+            movies = movies.filter(rating=rating)
+        movie_serialized = MovieSerializer(movies, many=True).data
+
+        return JsonResponse( movie_serialized, status=200, safe=False)
+   
 class AddMovieToTheaterAPIView(APIView):
     def post(self, request, *args, **kwargs):
         movie_serializer = MovieSerializer(data=request.data.get('movie'))

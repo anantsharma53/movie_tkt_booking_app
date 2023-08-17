@@ -87,7 +87,7 @@ function SearchPanel({ onNameChange, onLanguageChange, onGenreChange }) {
 
                 </div>
                 <div className="searchOption">
-                    <img src="http://pixner.net/boleto/demo/assets/images/ticket/date.png" alt="" />
+                    <img src="https://ww1.prweb.com/prfiles/2013/01/29/10376536/1.jpg" style={{width:'50px',height:'50px'}} alt="" />
                     {/* <label>Language</label> */}
                     <select
                         value={selectedLanguage}

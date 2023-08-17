@@ -123,8 +123,13 @@ class GenreList(APIView):
         unique_genres = Movie.objects.values_list('genre', flat=True).distinct()
         # Convert the QuerySet to a list
         genre_list = list(unique_genres)
-        return JsonResponse(genre_list, status=status.HTTP_200_OK, safe=False)  
-
+        return JsonResponse(genre_list, status=status.HTTP_200_OK, safe=False) 
+     
+class UniqueLanguagesAPI(APIView):
+    def get(self, request):
+        languages = Movie.objects.values_list('language', flat=True).distinct()
+        language_list=list(languages)
+        return JsonResponse(language_list, status=status.HTTP_200_OK,safe=False)
 
 class AddMovieToTheaterAPIView(APIView):
     def post(self, request, *args, **kwargs):

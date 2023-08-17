@@ -1,12 +1,14 @@
 import React from "react";
 import "./SearchPanel.css";
 import { useState } from "react";
-import  { useEffect } from "react";
+import { useEffect } from "react";
 
 function SearchPanel({ onNameChange, onLanguageChange, onGenreChange }) {
     const [searchName, setSearchName] = useState("");
     const [genres, setGenres] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState("");
+    const [languages, setLanguages] = useState([]);
+    const [selectedLanguage, setSelectedLanguage] = useState("");
     useEffect(() => {
         // Fetch genres from the API
         fetch("http://127.0.0.1:8000/api/movies/genres/")
@@ -23,6 +25,21 @@ function SearchPanel({ onNameChange, onLanguageChange, onGenreChange }) {
         const newGenre = event.target.value;
         setSelectedGenre(newGenre);
         onGenreChange(newGenre);
+    };
+    useEffect(() => {
+        // Fetch the unique languages from the API
+        fetch("http://127.0.0.1:8000/api/movies/language/")
+            .then((response) => response.json())
+            .then((data) => {
+                setLanguages(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching languages:", error);
+            });
+    }, []);
+    const handleLanguageChange = (value) => {
+        setSelectedLanguage(value);
+        onLanguageChange(value); // Call the parent's callback function with the selected language
     };
 
 
@@ -57,7 +74,7 @@ function SearchPanel({ onNameChange, onLanguageChange, onGenreChange }) {
                     </svg>
                 </div>
                 <div className="searchOption">
-                    <img src="http://pixner.net/boleto/demo/assets/images/ticket/city.png"></img>
+                    <img src="https://cdn3.iconfinder.com/data/icons/ballicons-reloaded-vol-1/512/icon-99-512.png" style={{width:'50px',height:'50px'}}></img>
                     {/* <label>Category</label> */}
                     <select value={selectedGenre} onChange={handleGenreChange}>
                         <option value="">Select Category</option>
@@ -71,7 +88,18 @@ function SearchPanel({ onNameChange, onLanguageChange, onGenreChange }) {
                 </div>
                 <div className="searchOption">
                     <img src="http://pixner.net/boleto/demo/assets/images/ticket/date.png" alt="" />
-                    <label>Date</label>
+                    {/* <label>Language</label> */}
+                    <select
+                        value={selectedLanguage}
+                        onChange={(e) => handleLanguageChange(e.target.value)}
+                    >
+                        <option value="">Select a Language</option>
+                        {languages.map((language, index) => (
+                            <option key={index} value={language}>
+                                {language}
+                            </option>
+                        ))}
+                    </select>
 
 
                 </div>

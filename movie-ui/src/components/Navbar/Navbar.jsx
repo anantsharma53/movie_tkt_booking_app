@@ -8,8 +8,7 @@ import { Link } from 'react-router-dom';
         <a className="navbar-brand" href="#">
           <img src="
           https://icon-library.com/images/movie-icon/movie-icon-2.jpg
-          "
-          style={{height:'60px',width:'100px'}}
+          "style={{height:'60px',width:'100px'}}
           alt="Movies Logo"
           ></img>
         </a>

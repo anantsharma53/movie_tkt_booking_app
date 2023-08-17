@@ -7,9 +7,9 @@ import { Link } from 'react-router-dom';
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
           <img src="
-          https://w7.pngwing.com/pngs/1011/407/png-transparent-movies-logo-the-film-television-logo.png
+          https://icon-library.com/images/movie-icon/movie-icon-2.jpg
           "
-          style={{height:'60px',width:'200px'}}
+          style={{height:'60px',width:'100px'}}
           alt="Movies Logo"
           ></img>
         </a>

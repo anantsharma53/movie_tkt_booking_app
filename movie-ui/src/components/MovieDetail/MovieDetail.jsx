@@ -1,7 +1,7 @@
 import Navbar from '../Navbar/Navbar';
 import { MovieHeader } from "../MovieHeader/MovieHeader";
 import "./MovieDetail.css";
-import { Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 export function MovieDetail(){
 

@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator
+from rest_framework.response import Response
 import json
 import random
 import copy
@@ -87,6 +88,21 @@ class GetMovieViews(APIView):
         'num_pages': paginator.num_pages, 
         "total_user": movies.count()})
     
+# class GetMovieDetailsViews(APIView):    
+#     def get(self, request, id):
+#         movies = Movie.objects.all()
+#         movies = movies.filter(id=id)  # Use the correct model name
+#         movie_serialized = MovieSerializer(movies, many=True).data
+#         return JsonResponse(movie_serialized, status=200, safe=False)
+class GetMovieDetailsViews(APIView):
+    def get(self, request, id):
+        try:
+            product = Movie.objects.get(id=id)
+            serializer = MovieSerializer(product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Movie.DoesNotExist:
+            return Response({"detail": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+            
 class MoviesAPI(View):
     def get(self, request):
         # Implement fetching all movies with optional filtering based on genre, language, location, and rating

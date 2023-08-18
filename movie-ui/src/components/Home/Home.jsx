@@ -57,7 +57,7 @@ export function Home() {
       console.log(searchName)
     return (
         <>
-            <Navbar />
+          <Navbar />
             <div className="homeContainer" style={{
                 backgroundImage: 'url("https://t4.ftcdn.net/jpg/02/86/32/31/360_F_286323187_mDk3N4nGDaPkUmhNcdBe3RjSOfKqx4nZ.jpg")',
                 backgroundRepeat: 'no-repeat',
@@ -85,17 +85,14 @@ export function Home() {
                 <div className="row">
                 {
                     movies.map(m=>
-                        <div key={m._id} className="col-md-3">
-                           <Link to={`movie/${m._id}`}>
-                                <MovieCard key={m._id} movie={m} />
+                        <div key={m.id} className="col-md-3">
+                          {console.log(m.id)}
+                           <Link to={`movie/${m.id}`}>
+                                <MovieCard key={m.id} movie={m} />
                             </Link>
-                        </div>
-                        
-                        
+                        </div>                                              
                         )
-                }
-               
-               
+                }  
             </div>
             </div>
         </>

@@ -7,6 +7,7 @@ import Navbar from './';
 import { Signin } from './components/SIgnIn/SignIn';
 import { Signup } from './components/Signup/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
+import { MovieDetail } from './components/MovieDetail/MovieDetail';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/signin' element={<Signin/>}/>
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
+          <Route path='/movie/:id/' element={<MovieDetail />} />
         </Routes>
         </BrowserRouter>
         {/* </Provider> */}

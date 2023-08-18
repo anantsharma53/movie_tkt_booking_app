@@ -1,3 +1,9 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .detailContainer {
     display: flex;
     justify-content: center;
@@ -21,6 +27,7 @@
     margin: 100px auto;
     background-repeat: no-repeat;
     box-shadow: 0 0 5px #ccc;
+    
   }
   .details{
     display: flex;

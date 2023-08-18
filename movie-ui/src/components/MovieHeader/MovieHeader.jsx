@@ -29,13 +29,11 @@ export function MovieHeader({ movie }) {
                 <p>Language: {movie.language}</p>
                 <p>Movie Duration: {movie.movie_length}</p>
                 <p><StarRating rating={movie.rating} /></p>
+                <p>Rating: {movie.rating}</p>
                 <a href={`${movie.id}/ticketPlan`} class="btnBookTickets">Book Tickets</a>
               </div>
             </div> 
       </div>
-            
-            
-
         </div>
     );
 }

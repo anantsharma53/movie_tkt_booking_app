@@ -44,17 +44,13 @@ console.log(movie)
     return(
         <div>
              <Navbar />
-             {console.log(movie.id)}
+             
              <div className="detail">
-                {/* <section className="header">
-                <img alt="" src={movie.image} className="img-fluid" style={{height:'600px',width:'200px'}} /> 
-                </section> */}
+               
                 <section className="movieHeader">
-                    <MovieHeader movie={movie}/>
+                <MovieHeader movie={movie}/>                    
                 </section>
-                <section className="banner">
-                <a href={`${id}/ticketPlan`} className="btnBookTickets">Book Tickets</a>
-                </section>
+                
              </div>
         </div>
     )

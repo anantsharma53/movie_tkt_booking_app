@@ -1,38 +1,42 @@
 
-import styles from "./MovieHeader.module.css";
+
+import "./MovieHeder.css"
 import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
+import StarRating from '../StarRating/StarRating'
 export function MovieHeader({ movie }) {
     console.log(movie);
 
     return (
-        <section className={styles.header}>
-            <div className={styles.container}>
-                <div className={styles.imageContainer}>
-                    <img src={movie.image} alt={movie.title} className={styles.image} />
+        <div className="detailContainer" style={{
+            backgroundImage: 'url("https://t4.ftcdn.net/jpg/02/86/32/31/360_F_286323187_mDk3N4nGDaPkUmhNcdBe3RjSOfKqx4nZ.jpg")',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',  // Adjust the background size as needed
+            backgroundPosition: 'center',
+            // Adjust the background position as needed
+        }}>
+            <div className="detailsbox">
+            <div className="details" >
+              <div className="big-img">
+                <img src={movie.image} alt=""/>
+              </div>
+
+              <div className="box">
+                <div className="row">
+                  <h2>Name : {movie.title}</h2>
+                  <span>Id: {movie.id}</span>
                 </div>
-                <div className={styles.detailsContainer}>
-                    <h3 className={styles.title}>{movie.title}</h3>
-                    <p className={styles.languages}>
-                        <span>{movie.language}</span>
-                    </p>
-                    <p>
-                        <a className={styles.btnGenres}>{movie.genre}</a>
-                    </p>
-                    <p className={styles.dates}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-date" viewBox="0 0 16 16">
-                            {/* SVG path data */}
-                        </svg> &nbsp;
-                        {/* Render date here */}
-                        &nbsp;&nbsp;
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clock" viewBox="0 0 16 16">
-                            {/* SVG path data */}
-                        </svg> &nbsp;
-                        {/* Render duration here */}
-                    </p>
-                </div>
-            </div>
-        </section>
+                <p>Language: {movie.language}</p>
+                <p>Movie Duration: {movie.movie_length}</p>
+                <p><StarRating rating={movie.rating} /></p>
+                <a href={`${movie.id}/ticketPlan`} class="btnBookTickets">Book Tickets</a>
+              </div>
+            </div> 
+      </div>
+            
+            
+
+        </div>
     );
 }
 

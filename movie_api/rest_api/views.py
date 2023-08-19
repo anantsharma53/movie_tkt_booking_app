@@ -88,12 +88,7 @@ class GetMovieViews(APIView):
         'num_pages': paginator.num_pages, 
         "total_user": movies.count()})
     
-# class GetMovieDetailsViews(APIView):    
-#     def get(self, request, id):
-#         movies = Movie.objects.all()
-#         movies = movies.filter(id=id)  # Use the correct model name
-#         movie_serialized = MovieSerializer(movies, many=True).data
-#         return JsonResponse(movie_serialized, status=200, safe=False)
+
 class GetMovieDetailsViews(APIView):
     def get(self, request, id):
         try:
@@ -146,27 +141,32 @@ class UniqueLanguagesAPI(APIView):
         languages = Movie.objects.values_list('language', flat=True).distinct()
         language_list=list(languages)
         return JsonResponse(language_list, status=status.HTTP_200_OK,safe=False)
+    
 
-class AddMovieToTheaterAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        movie_serializer = MovieSerializer(data=request.data.get('movie'))
-        theater_serializer = TheaterSerializer(data=request.data.get('theater'))
 
-        if movie_serializer.is_valid() and theater_serializer.is_valid():
-            movie = movie_serializer.save()
-            theater = theater_serializer.save(movie=movie)
-            return Response({
-                "movie": movie_serializer.data,
-                "theater": theater_serializer.data
-            }, status=status.HTTP_201_CREATED)
+class TheaterCreateView(APIView):
+    def post(self, request, movie_id):
+        print(request.data)
+        try:
+            movie = Movie.objects.get(id=movie_id)
+            request.data['movie'] = movie_id
+        except Movie.DoesNotExist:
+            return Response({"message": "Movie not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = TheaterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(movie=movie)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        errors = {}
-        if not movie_serializer.is_valid():
-            errors['movie'] = movie_serializer.errors
-        if not theater_serializer.is_valid():
-            errors['theater'] = theater_serializer.errors
-
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+class GetTheaterDetailsViews(APIView):
+    def get(self, request, id):
+        try:
+            product = Theater.objects.get(movie=id)
+            serializer = TheaterSerializer(product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Movie.DoesNotExist:
+            return Response({"detail": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class AddMovieToTheaterAPIView(APIView):
     def post(self, request, *args, **kwargs):

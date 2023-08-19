@@ -50,7 +50,7 @@ class Theater(models.Model):
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     pincode = models.CharField(max_length=10)
-    movie_timing = models.DateField()
+    movie_timing = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name

@@ -4,6 +4,7 @@ import './Dashboard.css'
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import MovieUpload from "../MovieUpload/MovieUpload";
+import MovieThUpload from "../THEMovie/THEMovie";
 function Dashboard() {
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
@@ -13,6 +14,7 @@ function Dashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [showModal, setShowModal] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
     // Function to fetch movie list List from the API
     function movieList(pageNumber) {
         fetch(`http://127.0.0.1:8000/api/movies/list?page=${pageNumber}`,
@@ -60,6 +62,9 @@ function Dashboard() {
     const openModal = () => {
         setShowModal(true);
     };
+    const openModal2 = () => {
+        setShowModal2(true);
+    };
 
     const closeModal = () => {
         setShowModal(false);
@@ -72,8 +77,8 @@ function Dashboard() {
             <button type="button" className="openModalBtn" onClick={openModal}>
                         Upload Movie
                     </button>
-                    <button type="button" className="openModalBtn" onClick={openModal}>
-                        Upload Movie
+                    <button type="button" className="openModalBtn" onClick={openModal2}>
+                        Update Theater Movie
                     </button>
                     <button type="button" className="openModalBtn" onClick={openModal}>
                         Upload Movie
@@ -221,6 +226,7 @@ function Dashboard() {
                 </div> 
 
 {showModal && <MovieUpload setShowModal={setShowModal} />}
+{showModal2 && <MovieThUpload setShowModal2={setShowModal2} />}
 
             </div>
 

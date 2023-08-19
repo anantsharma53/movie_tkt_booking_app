@@ -10,5 +10,7 @@ urlpatterns=[
     path('movies/all/',csrf_exempt(MoviesAPI.as_view()),name='list-movie'),
     path('movies/genres/', GenreList.as_view(), name='genre-list'),
     path('movies/language/', UniqueLanguagesAPI.as_view(), name='unique-languages'),
-    path('movie/<int:id>/', GetMovieDetailsViews.as_view(), name='unique-languages'),
+    path('movie/<int:id>/', GetMovieDetailsViews.as_view(), name='movie-detail'),
+    path('movies/<int:movie_id>/add_theater/', TheaterCreateView.as_view(), name='add-theater-to-movie'),
+    path('movie/the/<int:id>/', GetTheaterDetailsViews.as_view(), name='Theater-Details'),
 ]

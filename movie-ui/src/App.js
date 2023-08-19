@@ -8,6 +8,7 @@ import { Signin } from './components/SIgnIn/SignIn';
 import { Signup } from './components/Signup/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
 import { MovieDetail } from './components/MovieDetail/MovieDetail';
+import { BookTicket } from './components/BookTicket/BookTicket';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/movie/:id/' element={<MovieDetail />} />
+          <Route path='/movie/:id/bookticket' element={<BookTicket/>}/>
         </Routes>
         </BrowserRouter>
         {/* </Provider> */}

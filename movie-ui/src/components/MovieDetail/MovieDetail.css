@@ -1,50 +1,75 @@
 
-.detail{
-   
-    height: 100vh;
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.detailContainer {
     display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.banner{
+    justify-content: center;
+     /* Ensure the whole viewport is covered */
+    margin: 0;
     
-    height: 170px;
-    padding: 24px;
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-}
-
-.header{
-    position: relative;
-    width: 100%;
-    padding-left: 120px;
-    height: 250px;
-}
-
-.movieHeader{
-    width: 100%;
-    
-}
-
-.headerImg{
-    position: absolute;
-    top: 270px;
-    width: 250px;
-    height: 350px;
-    border: 1px solid #17305f;
-    border-radius: 6px;
-}
-
-.btnBookTickets{
-    background-image: -webkit-linear-gradient(169deg, #5560ff 17%, #aa52a1 63%, #ff4343 100%);
-    padding: 11px 24px;
-    font-weight: 600;
+  }
+.btnBookTickets {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
     text-decoration: none;
-    color: #ffffff;
+    border-radius: 5px;
+  }
+  .detailsbox{
+    max-width: 1200px;
+    width: 100%;
+    margin: 100px auto;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 5px #ccc;
+    
+  }
+  .details{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 30px 0;
+  }
+  .big-img img{
+    width: 600px;
+    height: 600px;
+    /* max-height: 400px; */
+    /* display: block; */
+    /* object-fit: cover; */
+  }
+  
+  .details .box{
+    max-width: 500px;
+    min-width: 290px;
+    margin: 25px;
+  }
+  .box .row{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  .box .row h2{
     text-transform: uppercase;
-    border-radius: 25px;
-    display: inline-block;
-}
+    letter-spacing: 2px;
+  }
+  .box .row span{
+    color: rgb(241, 233, 235);
+  }
+  .box .colors button{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #333;
+    outline: none;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  .box p{
+    line-height: 1.5;
+    margin: 15px 0;
+  }
+

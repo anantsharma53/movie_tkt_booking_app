@@ -10,7 +10,6 @@ import Dashboard from './components/Dashboard/Dashboard';
 import { MovieDetail } from './components/MovieDetail/MovieDetail';
 import { BookTicket } from './components/BookTicket/BookTicket';
 
-
 function App() {
   return (
     <div className="App">

@@ -1,19 +1,16 @@
 import Navbar from '../Navbar/Navbar';
 import { MovieHeader } from "../MovieHeader/MovieHeader";
 import "./MovieDetail.css";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import StarRating from '../StarRating/StarRating'
 export function MovieDetail() {
 
     const [movie, setMovie] = useState([]);
-    const[theater,setTheater] = useState([]);
-
-
+    const [theater, setTheater] = useState([]);
+    const [theaterAv, setTheaterAv] = useState(false);
     const { id } = useParams();
     console.log(id)
-
-
     useEffect(() => {
 
         const getProduct = () => {
@@ -22,8 +19,7 @@ export function MovieDetail() {
                 .then(res => res.json())
                 .then(json => {
                     setMovie(json);
-                    //console.log(json);
-                    //setLoading(false);
+
                 })
 
         }
@@ -31,22 +27,24 @@ export function MovieDetail() {
 
     }, []);
     useEffect(() => {
-
-        const gettheater = () => {
-
+        const getTheater = () => {
             fetch(`http://127.0.0.1:8000/api/movie/the/${id}`)
                 .then(res => res.json())
                 .then(json => {
-                    setTheater(json);
-                    //console.log(json);
-                    //setLoading(false);
+                    if (json.length === 0) {
+                        setTheaterAv(false);
+                    } else {
+                        setTheaterAv(true);
+                        setTheater(json);
+                    }
                 })
-
+                .catch(error => {
+                    console.error("Error fetching theater data:", error);
+                });
         }
-        gettheater();
 
+        getTheater();
     }, []);
-
 
     console.log(movie)
 
@@ -66,20 +64,44 @@ export function MovieDetail() {
                         <div className="big-img">
                             <img src={movie.image} alt="" />
                         </div>
+                        {
+                            theaterAv ? (
+                                <>
+                                    <div className="box">
+                                        <div className="row">
+                                            <h2>Name : {movie.title}</h2>
+                                            <h3>Screening: {theater.name}</h3>
+                                            <span>Address:{theater.address}</span>
+                                            <span>Date and Timing: {theater.movie_timing}</span>
+                                        </div>
+                                        <p>Language: {movie.language}</p>
+                                        <p>Movie Duration: {movie.movie_length}</p>
+                                        <p><StarRating rating={movie.rating} /></p>
+                                        <p>Rating: {movie.rating}</p>
+                                        <a href={`${movie.id}/bookticket`} className="btnBookTickets">Book Tickets</a>
+                                        <Link to='/' class="btnBookTickets">Go Back or Reshedule</Link>
+                                    </div>
+                                </>
+                            )
+                                : (<>
+                                    <div className="box">
+                                        <div className="row">
+                                            <h2>Name : {movie.title}</h2>
+                                            <h3>Theater information not available.</h3>
+                                        </div>
+                                        <p>Language: {movie.language}</p>
+                                        <p>Movie Duration: {movie.movie_length}</p>
+                                        <p><StarRating rating={movie.rating} /></p>
+                                        <p>Rating: {movie.rating}</p>
+                                        
+                                        <Link to='/' class="btnBookTickets">Go Back or Reshedule</Link>
+                                    </div>
 
-                        <div className="box">
-                            <div className="row">
-                                <h2>Name : {movie.title}</h2>
-                                <h3>Screening: {theater.name}</h3>
-                                <span>Address:{theater.address}</span>
-                                <span>Date and Timing: {theater.movie_timing}</span>
-                            </div>
-                            <p>Language: {movie.language}</p>
-                            <p>Movie Duration: {movie.movie_length}</p>
-                            <p><StarRating rating={movie.rating} /></p>
-                            <p>Rating: {movie.rating}</p>
-                            <a href={`${movie.id}/bookticket`} class="btnBookTickets">Book Tickets</a>
-                        </div>
+                                </>
+                                )
+                        }
+
+
                     </div>
                 </div>
             </div>

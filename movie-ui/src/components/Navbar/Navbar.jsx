@@ -1,7 +1,21 @@
 import './Navbar.css'
-
+import { useEffect,useState} from "react";
 import { Link } from 'react-router-dom';
  function Navbar() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      setLoggedIn(false)
+    } else {
+      setLoggedIn(true)
+    }
+  }, [loggedIn]);
+  const onLogoutHandler = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    
+  }
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-bg">
       <div className="container-fluid">
@@ -31,9 +45,10 @@ import { Link } from 'react-router-dom';
               </a>
             </li>
           </ul>
-          <Link to ='/signin'className="btn btn-primary float-end" >
+          {loggedIn?<Link to ='/signin' className="btn btn-primary float-end" onClick={onLogoutHandler}>Log Out </Link>
+          :<Link to ='/signin'className="btn btn-primary float-end" >
             Join Us
-          </Link>
+          </Link>}
         </div>
       </div>
     </nav>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Navbar from '../Navbar/Navbar';
 import './BookTicket.css'
+import SeatLayout from '../SeatLayout/SeatLayout';
 
 export function BookTicket() {
     const [cinemas, setCinemas] = useState([])
@@ -11,11 +12,11 @@ export function BookTicket() {
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/movie/the/${id}`)
             .then((res) => res.json())
-            .then((parsedRes) => {
-                setCinemas(parsedRes)
+            .then((data) => {
+                setCinemas(data)
             })
     }, [])
-
+console.log(cinemas)
     return (
         <div className="plan"
             style={{
@@ -77,7 +78,7 @@ export function BookTicket() {
                                 <h4>SLIVER PLUS</h4>
                                 <hr />
                             </p>
-
+                                <SeatLayout theaterdetails={cinemas}/>
                             {/* <SeatLayout />
 
                             <BookingSummary /> */}

@@ -170,6 +170,7 @@ class GetTheaterDetailsViews(APIView):
         
 class SeatBookingView(APIView):
     def post(self, request):
+        print(request.data)
         serializer = SeatSerializer(data=request.data)
         if serializer.is_valid():
             theater_id = serializer.validated_data['theater']

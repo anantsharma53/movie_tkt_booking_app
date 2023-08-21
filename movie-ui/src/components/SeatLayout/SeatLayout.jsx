@@ -9,7 +9,8 @@ function SeatLayout(props) {
   const { theaterdetails } = props;
   console.log(theaterdetails);
   const [selectedSeats, setSelectedSeats] = useState([]);
-
+  const seatprice = 150;
+  const totalPrice = seatprice*(selectedSeats.length);
   const handleSeatClick = (seatNumber) => {
     // Toggle seat selection
     if (selectedSeats.includes(seatNumber)) {
@@ -47,18 +48,18 @@ function SeatLayout(props) {
 
     return seatComponents;
   };
-  const seatprice = 150;
+  
   const handleBookSeats = () => {
     if (token) {
 
       // Create an object with the booking data
       const bookingData = {
         theater: theaterdetails.id,
-        seat_number: selectedSeats,
-        movie: theaterdetails.movie,
-        is_reserved: "true",
-        category: "silver",
-        price: 200,
+        seat_numbers: selectedSeats,
+        movie_id: theaterdetails.movie,
+        is_reserved: true,
+        category: 'silver',
+        price: parseFloat(totalPrice),
 
       };
       console.log(bookingData);
@@ -67,6 +68,7 @@ function SeatLayout(props) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(bookingData),
       })

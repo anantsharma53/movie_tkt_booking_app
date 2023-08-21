@@ -34,10 +34,12 @@ class TheaterSerializer(serializers.ModelSerializer):
         model = Theater
         fields = '__all__'
 
+
 class SeatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seat
         fields = '__all__'
+
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:

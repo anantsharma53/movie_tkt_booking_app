@@ -35,6 +35,7 @@ function MovieThUpload({ setShowModal2 }) {
 
     const handleMovieSelection = (value) => {
         setSelectedMovie(value);
+        console.log(selectedMovie)
     };
     console.log(allmovies);
     const handleSubmit = (values) => {
@@ -52,14 +53,14 @@ function MovieThUpload({ setShowModal2 }) {
             body: JSON.stringify(theaterData),
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
             },
         })
             .then((res) => {
                 if (res.status === 201) {
                     alert("Successful Uploaded");
                     document.getElementById("movie-form").reset();
-                    navigate("/"); // Redirect to another page after successful upload
+                    navigate("/dashboard"); // Redirect to another page after successful upload
                 } else if (res.status === 401) {
                     console.log("Unauthorized request");
                     navigate("/login");

@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 import json
 import random
 import copy
@@ -142,8 +143,6 @@ class UniqueLanguagesAPI(APIView):
         language_list=list(languages)
         return JsonResponse(language_list, status=status.HTTP_200_OK,safe=False)
     
-
-
 class TheaterCreateView(APIView):
     def post(self, request, movie_id):
         print(request.data)
@@ -158,6 +157,8 @@ class TheaterCreateView(APIView):
             serializer.save(movie=movie)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 
 class GetTheaterDetailsViews(APIView):
     def get(self, request, id):
@@ -168,59 +169,6 @@ class GetTheaterDetailsViews(APIView):
         except Movie.DoesNotExist:
             return Response({"detail": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)
         
-class SeatBookingView(APIView):
-    def post(self, request):
-        print(request.data)
-        serializer = SeatSerializer(data=request.data)
-        if serializer.is_valid():
-            theater_id = serializer.validated_data['theater']
-            movie_id = serializer.validated_data['movie']
-            seat_numbers = serializer.validated_data['seat_number']
-            is_reserved = serializer.validated_data['is_reserved']
-            category = serializer.validated_data['category']
-            price = serializer.validated_data['price']
-
-            # Check if the theater and movie exist
-            try:
-                theater = Theater.objects.get(id=theater_id)
-                movie = Movie.objects.get(id=movie_id)
-            except (Theater.DoesNotExist, Movie.DoesNotExist):
-                return Response({"message": "Theater or Movie not found"}, status=status.HTTP_404_NOT_FOUND)
-
-            # Check if the seat numbers are valid
-            invalid_seats = []
-            valid_seats = []
-
-            for seat_number in seat_numbers:
-                try:
-                    seat = Seat.objects.get(theater=theater, movie=movie, seat_number=seat_number)
-                except Seat.DoesNotExist:
-                    invalid_seats.append(seat_number)
-                else:
-                    if seat.is_reserved:
-                        invalid_seats.append(seat_number)
-                    else:
-                        valid_seats.append(seat)
-
-            if invalid_seats:
-                return Response({"message": "Invalid or reserved seat numbers: {', '.join(invalid_seats)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Create a booking and update seat statuses
-            total_cost = len(valid_seats) * price
-            booking = Booking.objects.create(user=request.user, movie=movie, total_cost=total_cost)
-            booking.seats.add(*valid_seats)
-
-            # Mark seats as reserved
-            valid_seats.update(is_reserved=True)
-
-            return Response({"message": "Seats booked successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
 
 
 
@@ -240,41 +188,91 @@ class AddMovieToTheaterAPIView(APIView):
         return Response({
             "message": f"Movie '{movie.title}' added to theater '{theater.name}'"
         }, status=status.HTTP_201_CREATED)
+    
+# class SeatBookingView(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def post(self, request, format=None):
+#         # Deserialize the request data
+#         print(request.data)
+
+#         seat_numbers = request.data.get('seats', [])  # Assuming 'seat_numbers' is an array
+#         theater_id = request.data.get('theater')
+#         category = request.data.get('category', 'default_category')
+#         price = request.data.get('price', 0.00)
+#         movie_id = request.data.get('movie')
+
+#         # Check if seats exist in the database
+#         seats = Seat.objects.filter(
+#             theater_id=theater_id,
+#             is_reserved=False,
+#             id__in=seat_numbers  # Filter seats by their IDs
+#         )
+
+#         if len(seats) != len(seat_numbers):
+#             return Response({"message": "Some seats are not available or already reserved."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Calculate the total cost
+#         total_cost = len(seats) * price
+
+#         # Create a booking
+#         booking_data = {
+#             'user': request.user.id,
+#             'movie': movie_id,
+#             'total_cost': total_cost,
+#             'seats':seats
+
+#         }
+#         booking_serializer = BookingSerializer(data=booking_data)
+
+#         if booking_serializer.is_valid():
+#             booking = booking_serializer.save()
+
+#             # Create BookingSeat instances for each selected seat
+#             for seat_number in seat_numbers:
+#                 try:
+#                     seat = Seat.objects.get(seat_numbers=seat_number, theater=theater_id, is_reserved=False)
+#                     booking_seat = BookingSeat(seat_number=seat_number, seat=seat)
+#                     booking_seat.save()
+#                 except Seat.DoesNotExist:
+#                     # Handle the case where the seat doesn't exist or is already reserved
+#                     return Response({"message": "Some seats are not available or already reserved."}, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# class SeatBookingView(APIView):
+#     def post(self, request, format=None):
+#         seats_data = json.loads(request.body)
+#         seat_serializer = SeatSerializer(data=seats_data)
+#         if seat_serializer.is_valid():
+#             seat_serializer.save()
+#             return JsonResponse({"message": "Seats reserved successfully"}, status=201)
+#         else:
+#             return HttpResponseBadRequest()
 
-class SeatSelectionAndBookingAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        movie_serializer = MovieSerializer(data=request.data.get('movie'))
-        theater_serializer = TheaterSerializer(data=request.data.get('theater'))
-        seat_serializer = SeatSerializer(data=request.data.get('seats'))
-        
-        if movie_serializer.is_valid() and theater_serializer.is_valid() and seat_serializer.is_valid():
-            movie = movie_serializer.save()
-            theater = theater_serializer.save(movie=movie)
-            seats = seat_serializer.save(theater=theater, movie=movie)
-            total_cost = sum(seat.price for seat in seats)
-            
-            booking_data = {
-                "user": request.user.id,  # You need to replace this with the actual user ID
-                "movie": movie.id,
-                "seats": [seat.id for seat in seats],
-                "total_cost": total_cost
-            }
-            
-            booking_serializer = BookingSerializer(data=booking_data)
-            if booking_serializer.is_valid():
-                booking_serializer.save()
-                return Response(booking_serializer.data, status=status.HTTP_201_CREATED)
-            
-            return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        errors = {}
-        if not movie_serializer.is_valid():
-            errors['movie'] = movie_serializer.errors
-        if not theater_serializer.is_valid():
-            errors['theater'] = theater_serializer.errors
-        if not seat_serializer.is_valid():
-            errors['seats'] = seat_serializer.errors
-        
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+class SeatBookingView(APIView):
+    def post(self, request, format=None):
+        data = request.data
+        theater_id = data.get('theater')
+        seats_data = data.get('seats')
+        category = data.get('category')
+        movie_id = data.get('movie')
+        price = data.get('price')
+
+        # Create the Booking object
+        booking = Booking(user=request.user, movie_id=movie_id)
+        booking.save()
+
+        # Create Seat objects for each seat in the list
+        for seat_number in seats_data:
+            seat = Seat(
+                theater_id=theater_id,
+                movie_id=movie_id,
+                seat_number=seat_number,
+                category=category,
+                price=price,
+                is_reserved=True,
+            )
+            seat.save()
+            booking.seats.add(seat)
+
+        return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)

@@ -55,11 +55,11 @@ function SeatLayout(props) {
       // Create an object with the booking data
       const bookingData = {
         theater: theaterdetails.id,
-        seat_numbers: selectedSeats,
+        seats: selectedSeats,
         movie_id: theaterdetails.movie,
         is_reserved: true,
         category: 'silver',
-        price: parseFloat(totalPrice),
+        price: 200.00,
 
       };
       console.log(bookingData);

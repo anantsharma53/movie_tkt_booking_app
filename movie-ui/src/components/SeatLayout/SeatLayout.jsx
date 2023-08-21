@@ -56,7 +56,7 @@ function SeatLayout(props) {
       const bookingData = {
         theater: theaterdetails.id,
         seats: selectedSeats,
-        movie_id: theaterdetails.movie,
+        movie: theaterdetails.movie,
         is_reserved: true,
         category: 'silver',
         price: 200.00,

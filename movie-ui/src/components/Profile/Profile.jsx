@@ -3,7 +3,9 @@ import './Profile.css'
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn } from 'mdb-react-ui-kit';
 
  function Profile(props) {
-     const { userDetails } = props;
+  
+  const userDetails=JSON.parse(localStorage.getItem("user_details"))
+     
   return (
     <div >
       <div className='my-custom-container'>
@@ -35,7 +37,7 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCa
                         <p className="small text-muted mb-1">Mobile No: {userDetails.mobile_number}</p>
                       </div>
                     </div>
-                    <button  className="btnBookTickets">Update Detail</button>
+                    <button  className="btnupdate">Update Detail</button>
                     
                     {/* <div className="d-flex pt-1">
                       <MDBBtn outline className="me-1 flex-grow-1">Update Detail</MDBBtn>

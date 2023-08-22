@@ -132,6 +132,7 @@ function SeatLayout(props) {
             console.log('Booking failed. One or more seats are already reserved.');
           } else {
             // Handle other errors
+            navigate('/dasboard');
             console.error('Booking failed. Server error.');
           }
         })

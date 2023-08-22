@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import './Dashboard.css'
 import { Link } from "react-router-dom";
@@ -9,6 +10,7 @@ import Home from "../Home/Home";
 import ShowTicket from "../ShowTicket/ShowTickets";
 import Profile from "../Profile/Profile";
 function Dashboard() {
+    const navigate=useNavigate()
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
     const token = localStorage.getItem('token')
@@ -23,7 +25,7 @@ function Dashboard() {
         const user = JSON.parse(localStorage.getItem('user_details'));
         const isSuperUser = user && user.is_superuser;
         const token = localStorage.getItem('token')
-
+        if(token){
         fetch(`http://127.0.0.1:8000/api/movies/list?page=${pageNumber}`,
             {
                 headers: {
@@ -50,6 +52,11 @@ function Dashboard() {
                 setError(err);
             });
     }
+    else{
+        navigate('/signin')
+    }
+    
+}
 
 
 
@@ -102,7 +109,7 @@ function Dashboard() {
                     <div className="dashboardContainer">
 
 
-                    <Profile userDetails={user} />
+                    <Profile  />
 
                         {/* <div className="userDetail">
                             <h2 className="welcomeText">Your Profile Details</h2>

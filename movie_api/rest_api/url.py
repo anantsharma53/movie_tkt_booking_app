@@ -15,6 +15,7 @@ urlpatterns=[
     path('movies/<int:movie_id>/add_theater/', TheaterCreateView.as_view(), name='add-theater-to-movie'),
     path('movie/the/<int:id>/', GetTheaterDetailsViews.as_view(), name='Theater-Details'),
     path('movies/book-seat/', csrf_exempt(SeatBookingView.as_view()), name='book-seat'),
+    path('delete-seat/', csrf_exempt(DeleteSeatView.as_view()), name='Delete-seat'),
     path('reserved-seats/<int:theater_id>/<int:movie_id>/<str:date>/<str:movie_timing>/', BookedSeatView.as_view(), name='reserved-seats-list'),
     path('movies/tickets/', csrf_exempt(BookingDetailsView.as_view()), name='book-Tickets-details'),
     

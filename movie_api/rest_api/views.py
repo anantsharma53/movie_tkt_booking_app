@@ -144,24 +144,6 @@ class UniqueLanguagesAPI(APIView):
         language_list=list(languages)
         return JsonResponse(language_list, status=status.HTTP_200_OK,safe=False)
 
-# class AvailableShowTimes(APIView):
-#     def get(self, request, movie_id):
-#         try:
-#             theaters = Theater.objects.filter(movie_id=movie_id)
-#             available_show_times = []
-
-#             for theater in theaters:
-#                 available_show_times.append({
-#                     'theater_name': theater.name,
-#                     'first_show': theater.first_show,
-#                     'second_show': theater.second_show,
-#                     'third_show': theater.third_show,
-#                 })
-
-#             return Response(available_show_times, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 class AvailableShowTimes(APIView):
     def get(self, request, movie_id):
         try:
@@ -174,9 +156,7 @@ class AvailableShowTimes(APIView):
                     'second_show': theater.second_show,
                     'third_show': theater.third_show,
                 }
-
             return Response(available_show_times, status=status.HTTP_200_OK)
-
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -243,6 +223,31 @@ class SeatBookingView(APIView):
         return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)
 
 
+class DeleteSeatView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        data = request.data
+        print(data)
+        user_id = request.user.id
+        movie_id = data.get('movie_id')  
+        seat_number = data.get('seat_number') 
+        date = data.get('date') 
+       
+        seats=Seat.objects.all()
+        seat_to_delete=seats.filter(seat_number=seat_number)
+        # try:
+        #     seat_to_delete = Seat.objects.filter(
+        #         user_id=user_id,
+        #         movie_id=movie_id,
+        #         seat_number=seat_number,
+        #         date=date
+        #     )
+        seat_to_delete.delete()
+        return Response({'message': 'Seat data deleted successfully'}, status=status.HTTP_200_OK)
+    # except Seat.DoesNotExist:
+    #     return Response({'error': 'Seat data not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class BookedSeatView(APIView):
     def get(self, request, theater_id, movie_id, date, movie_timing):
 
@@ -290,7 +295,7 @@ class BookingDetailsView(APIView):
         theater_ids = seats.values_list('theater_id',flat=True).distinct()
         theater_id_list = list(theater_ids)
         print(theater_ids)
-        theaters = Theater.objects.filter(id=theater_ids[0])
+        theaters = Theater.objects.filter(id=theater_ids)
         theater_serializer = TheaterSerializer(theaters, many=True).data
         # booking=Booking.objects.filter(user_id=user,movie_id=)
         # print(booking)

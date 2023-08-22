@@ -7,7 +7,10 @@ function ShowTicket() {
     const token = localStorage.getItem('token')
     const[data,setData]=useState([])
     const [loading, setLoading] = useState(true);
+
+   
     useEffect(() => {
+        
         // Define the URL of the API
         const apiUrl = 'http://127.0.0.1:8000/api/movies/tickets/';
     
@@ -32,14 +35,44 @@ function ShowTicket() {
             setLoading(false); // Set loading to false in case of an error
           });
       }, [token]);
-      console.log(data);
+    console.log(data);
+
+    const handleDeleteSeat = (movieId, seatNumber, date) => {
+        const data = {
+          movie_id: movieId,
+          seat_number: seatNumber,
+          date: date,
+        };
+    
+        fetch('http://127.0.0.1:8000/api/delete-seat/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Include your authentication token here
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              return response.json();
+            } else {
+              throw new Error('Seat data not found');
+            }
+          })
+          .then((data) => {
+            // setMessage(data.message);
+          })
+          .catch((error) => {
+            // setMessage(error.message);
+          });
+      };
    
 
     
 
     function SeatDetails({ seatDetails,theaterDetails }) {
         return (
-                        <table class="container table1 user-list1">
+                        <table class="container table user-list tablecolour">
                             <thead>
                                 <tr>
                                     <th class="text-center"><span>Sl No:</span></th>
@@ -72,7 +105,7 @@ function ShowTicket() {
                                                 </a>
                                                 <a href="#" class="table-link">
                                                     <span class="fa-stack">
-                                                    <img src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg" 
+                                                    <img onClick={handleDeleteSeat(seat.movie, seat.seat_number, seat.date)} src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg" 
                                                         style={{width:'70px',height:'70px'}}/>
                                                     </span>
                                                 </a>
@@ -123,7 +156,8 @@ function ShowTicket() {
                 {loading? 
         <div>Loading...</div>:
         <div className="userLogin">
-            <Profile userDetails={data.user_details} />
+            <Profile />
+            {/* <Profile userDetails={data.user_details} /> */}
             <SeatDetails seatDetails={data.seat_details} theaterDetails={data.theater_details} />
             {/* <TheaterDetails theaterDetails={data.theater_details} /> */}
         </div>

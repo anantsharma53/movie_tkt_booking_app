@@ -39,7 +39,7 @@ function ShowTicket() {
 
     function SeatDetails({ seatDetails,theaterDetails }) {
         return (
-                        <table class="container table user-list">
+                        <table class="container table1 user-list1">
                             <thead>
                                 <tr>
                                     <th class="text-center"><span>Sl No:</span></th>
@@ -123,8 +123,8 @@ function ShowTicket() {
                 {loading? 
         <div>Loading...</div>:
         <div className="userLogin">
-            <Profile userDetails={data.user_details} theaterDetails={data.theater_details}/>
-            <SeatDetails seatDetails={data.seat_details} />
+            <Profile userDetails={data.user_details} />
+            <SeatDetails seatDetails={data.seat_details} theaterDetails={data.theater_details} />
             {/* <TheaterDetails theaterDetails={data.theater_details} /> */}
         </div>
 

@@ -125,7 +125,7 @@ function SeatLayout(props) {
         .then((response) => {
           if (response.status === 201) {
             // Booking successful, you can handle this case as needed (e.g., show a confirmation message)
-            navigate('/getticket/');
+            navigate('/dasboard');
             console.log('Seats booked successfully');
           } else if (response.status === 400) {
             // Handle validation errors or seat availability errors

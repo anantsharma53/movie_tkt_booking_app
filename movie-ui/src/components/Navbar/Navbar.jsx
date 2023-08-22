@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
   }, [loggedIn]);
   const onLogoutHandler = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem('user_details');
+    localStorage.removeItem("tokenExpiration");
     setLoggedIn(false);
     
   }
@@ -44,6 +46,13 @@ import { Link } from 'react-router-dom';
                 Home
               </a>
             </li>
+            <li className="nav-item">
+            <a className="nav-link active" aria-current="page" href="/dashboard">
+                Dashboard
+              </a>
+            {/* <Link to='/dashboard' className="nav-link active" aria-current="page">Dashboard</Link> */}
+            </li>
+            
           </ul>
           {loggedIn?<Link to ='/signin' className="btn btn-primary float-end" onClick={onLogoutHandler}>Log Out </Link>
           :<Link to ='/signin'className="btn btn-primary float-end" >

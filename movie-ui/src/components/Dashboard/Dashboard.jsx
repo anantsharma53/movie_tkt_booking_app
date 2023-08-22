@@ -6,6 +6,8 @@ import Navbar from "../Navbar/Navbar";
 import MovieUpload from "../MovieUpload/MovieUpload";
 import MovieThUpload from "../THEMovie/THEMovie";
 import Home from "../Home/Home";
+import ShowTicket from "../ShowTicket/ShowTickets";
+import Profile from "../Profile/Profile";
 function Dashboard() {
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
@@ -100,15 +102,15 @@ function Dashboard() {
                     <div className="dashboardContainer">
 
 
+                    <Profile userDetails={user} />
 
-
-                        <div className="userDetail">
+                        {/* <div className="userDetail">
                             <h2 className="welcomeText">Your Profile Details</h2>
                             <h2 className="welcomeUserText">Name: {user.name}</h2>
                             <h2 className="welcomeUserText">Username: {user.username}</h2>
                             <h2 className="welcomeUserText">Email: {user.email}</h2>
                             <h2 className="welcomeUserText">Mobile Number: {user.mobile_number}</h2>
-                        </div>
+                        </div> */}
                         <div>
                             {isSuperUser &&
                                 (<div class="container mt-5 table">
@@ -239,7 +241,7 @@ function Dashboard() {
                     </div>
                 </div>) :
                 (<>
-                                       
+                   <ShowTicket/>                    
                 </>
 
                 )

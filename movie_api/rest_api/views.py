@@ -221,9 +221,9 @@ class SeatBookingView(APIView):
             booking.seats.add(seat)
 
         return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)
-class BookedSeatView(APIView):
-    def get(self, request, movie_id,theater_id,time):
-        seats = Seat.objects.filter(screening__movie_id=movie_id)
+# class BookedSeatView(APIView):
+#     def get(self, request, movie_id,theater_id,time):
+#         seats = Seat.objects.filter(screening__movie_id=movie_id)
 
 class BookedSeatView(APIView):
     def get(self, request, theater_id, movie_id, date, movie_timing):

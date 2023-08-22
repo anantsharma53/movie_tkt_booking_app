@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./SeatLayout.css"; // Import your CSS for styling
 import { useNavigate } from 'react-router-dom';
+import PaymentModal from "../PaymentModal/PaymentModal";
 function SeatLayout(props) {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user_details'));
@@ -12,6 +13,8 @@ function SeatLayout(props) {
   const [selectedShowTime, setSelectedShowTime] = useState();
   const [selectedShowDate, setSelectedShowDate] = useState();
   const [reservedSeat, setReservedSeat] = useState([]);
+  const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentKey, setPaymentKey] = useState('');
   const seatprice = 150;
   const totalPrice = seatprice * (selectedSeats.length);
   const handleSeatClick = (seatNumber) => {
@@ -47,21 +50,33 @@ function SeatLayout(props) {
           >
             {/* {seatNumber} */}
             {isReserved ? (
-              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Reserved Chair" style={{width:'25px',height:'25px'}} />
+              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Reserved Chair" style={{ width: '25px', height: '25px' }} />
             ) : (
-              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Empty Chair" style={{width:'25px',height:'25px'}} />
+              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Empty Chair" style={{ width: '25px', height: '25px' }} />
             )}
 
           </div>
         );
       }
     }
-
-    
-
     return seatComponents;
-  };
+  };   
 
+    const handleOpenPaymentModal = () => {
+      setPaymentModalOpen(true);
+    };
+
+    const handleClosePaymentModal = () => {
+      setPaymentModalOpen(false);
+    };
+
+    const handlePaymentDone = (key) => {
+      setPaymentKey(key);
+      setPaymentModalOpen(false);
+
+      handleBookSeats();
+    };
+  
   const handleBookSeats = () => {
     if (token) {
 
@@ -89,6 +104,7 @@ function SeatLayout(props) {
         .then((response) => {
           if (response.status === 201) {
             // Booking successful, you can handle this case as needed (e.g., show a confirmation message)
+            navigate('/getticket/')
             console.log('Seats booked successfully');
           } else if (response.status === 400) {
             // Handle validation errors or seat availability errors
@@ -116,7 +132,7 @@ function SeatLayout(props) {
       .catch((error) => {
         console.error("Error fetching languages:", error);
       });
-  }, [selectedShowDate, selectedShowTime]);
+  }, [selectedShowDate, selectedShowTime,theaterdetails.id,theaterdetails.movie]);
   console.log(reservedSeat);
 
   return (
@@ -170,9 +186,18 @@ function SeatLayout(props) {
         </div>
 
       </div>
+      <PaymentModal
+                isOpen={isPaymentModalOpen}
+                onClose={handleClosePaymentModal}
+                onPaymentDone={handlePaymentDone}
+              />
+              {paymentKey && <p>Payment Key: {paymentKey}</p>}
       {
-        selectedSeats.length !== 0 & selectedShowDate & selectedShowTime ?
-          <button class="btnBookTickets" onClick={handleBookSeats}>Book Selected Seats</button>
+        selectedSeats.length !== 0 && selectedShowDate && selectedShowTime ?
+         
+              <button class="btnBookTickets" onClick={handleOpenPaymentModal}>Make Pyment</button>
+
+          // <button class="btnBookTickets" onClick={handleBookSeats}>Book Selected Seats</button>
           :
           <button class="btnBookTickets" disabled>Book Selected Seats</button>
       }

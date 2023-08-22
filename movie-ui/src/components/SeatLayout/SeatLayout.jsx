@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SeatLayout.css"; // Import your CSS for styling
 import { useNavigate } from 'react-router-dom';
 function SeatLayout(props) {
@@ -9,8 +9,11 @@ function SeatLayout(props) {
   const { theaterdetails } = props;
   console.log(theaterdetails);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedShowTime, setSelectedShowTime] = useState();
+  const [selectedShowDate, setSelectedShowDate] = useState();
+  const [reservedSeat, setReservedSeat] = useState([]);
   const seatprice = 150;
-  const totalPrice = seatprice*(selectedSeats.length);
+  const totalPrice = seatprice * (selectedSeats.length);
   const handleSeatClick = (seatNumber) => {
     // Toggle seat selection
     if (selectedSeats.includes(seatNumber)) {
@@ -23,14 +26,17 @@ function SeatLayout(props) {
   // Generate a grid of seats (you can customize this based on your needs)
   const rows = 5;
   const seatsPerRow = 10;
-
   const renderSeats = () => {
     const seatComponents = [];
-    console.log(selectedSeats)
+    console.log(selectedSeats);
+
+    // Create a set of reserved seat numbers for quick lookup
+    const reservedSeatNumbers = new Set(reservedSeat.reserved_seat_numbers);
+
     for (let row = 1; row <= rows; row++) {
       for (let seat = 1; seat <= seatsPerRow; seat++) {
         const seatNumber = `${row}-${seat}`;
-        const isReserved = false; // You can implement your logic for reserved seats
+        const isReserved = reservedSeatNumbers.has(seatNumber);
 
         seatComponents.push(
           <div
@@ -39,16 +45,23 @@ function SeatLayout(props) {
               }`}
             onClick={() => !isReserved && handleSeatClick(seatNumber)}
           >
-            {seatNumber}
+            {/* {seatNumber} */}
+            {isReserved ? (
+              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Reserved Chair" style={{width:'25px',height:'25px'}} />
+            ) : (
+              <img src="https://cdn-icons-png.flaticon.com/512/1683/1683809.png" alt="Empty Chair" style={{width:'25px',height:'25px'}} />
+            )}
 
           </div>
         );
       }
     }
 
+    
+
     return seatComponents;
   };
-  
+
   const handleBookSeats = () => {
     if (token) {
 
@@ -57,9 +70,8 @@ function SeatLayout(props) {
         theater: theaterdetails.id,
         seats: selectedSeats,
         movie: theaterdetails.movie,
-        time:theaterdetails.movie_timing,
-        date:theaterdetails.movie_date,
-        is_reserved: true,
+        movie_timing: selectedShowTime,
+        date: selectedShowDate,
         category: 'silver',
         price: 200.00,
 
@@ -91,12 +103,48 @@ function SeatLayout(props) {
         });
     } else {
       navigate('/signin');
-      
+
     }
   };
+  useEffect(() => {
+    // Fetch the unique languages from the API
+    fetch(`http://127.0.0.1:8000/api/reserved-seats/${theaterdetails.id}/${theaterdetails.movie}/${selectedShowDate}/${selectedShowTime}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setReservedSeat(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching languages:", error);
+      });
+  }, [selectedShowDate, selectedShowTime]);
+  console.log(reservedSeat);
 
   return (
     <>
+      <div class="selectshow">
+        <label htmlFor="selectedShowDate">Date</label>
+        <input
+          type="date"
+          name="selectedShowDate"
+          value={selectedShowDate}
+          onChange={(e) => setSelectedShowDate(e.target.value)}
+          className="form-control"
+        />
+      </div>
+      <div className="selectshow ">
+        <label htmlFor="selectedShowTime">Show Time </label>
+        <select
+          name="selectedShowTime"
+          value={selectedShowTime}
+          onChange={(e) => setSelectedShowTime(e.target.value)}
+          style={{ color: 'black' }}
+        >
+          <option style={{ color: 'black' }} value="">Select Show Time</option>
+          <option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>
+          <option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>
+          <option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>
+        </select>
+      </div>
       <div className="seat-layout">
         <h2>Select Seat</h2>
         {/* <div className="screen">Screen</div> */}
@@ -123,12 +171,12 @@ function SeatLayout(props) {
 
       </div>
       {
-        selectedSeats.length !== 0 ?
-        <button class="btnBookTickets" onClick={handleBookSeats}>Book Selected Seats</button>
-        :
-        <button class="btnBookTickets" disabled>Book Selected Seats</button>
+        selectedSeats.length !== 0 & selectedShowDate & selectedShowTime ?
+          <button class="btnBookTickets" onClick={handleBookSeats}>Book Selected Seats</button>
+          :
+          <button class="btnBookTickets" disabled>Book Selected Seats</button>
       }
-     
+
     </>
   );
 }

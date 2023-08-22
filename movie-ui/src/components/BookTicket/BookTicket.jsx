@@ -8,7 +8,7 @@ export function BookTicket() {
    
     const [cinemas, setCinemas] = useState([])
     // const cinemans = [];
-    console.log('Ticket plan loaded')
+    
     const { id } = useParams()
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/movie/the/${id}`)
@@ -17,6 +17,7 @@ export function BookTicket() {
                 setCinemas(data)
             })
     }, [])
+  
 console.log(cinemas)
     return (
         <div className="plan"
@@ -56,7 +57,8 @@ console.log(cinemas)
                                     className="link"
                                     to={'/movie/seatPlan/' + cinemas.id}
                                 >
-                                    <p className="time">{cinemas.movie_timing}</p>
+                                    <p className="time">Start Date: {cinemas.date}</p>
+                                    <p className="time">Show Time: {cinemas.first_show}, {cinemas.second_show}, {cinemas.third_show}</p>
                                 </Link>
 
                             </div>

@@ -71,8 +71,15 @@ export function MovieDetail() {
                                         <div className="row">
                                             <h2>Name : {movie.title}</h2>
                                             <h3>Screening: {theater.name}</h3>
-                                            <span>Address:{theater.address}</span>
-                                            <span>Date and Timing: {theater.movie_timing}</span>
+                                            <span>Address: {theater.address}</span>
+                                            <span>Start Date: {theater.date}</span>
+                                        </div>
+                                        <div className='row'>
+                                            <h2>Show Time</h2>
+                                            <span>First Show: {theater.first_show}</span>
+                                            <span>Second Show: {theater.second_show}</span>
+                                            <span>Third Show: {theater.third_show}</span>
+
                                         </div>
                                         <p>Language: {movie.language}</p>
                                         <p>Movie Duration: {movie.movie_length}</p>

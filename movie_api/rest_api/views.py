@@ -198,7 +198,7 @@ class SeatBookingView(APIView):
         category = data.get('category')
         movie_id = data.get('movie')
         price = data.get('price')
-        movie_timing=data.get('time')
+        movie_timing=data.get('movie_timing')
         date=data.get('date')
 
         # Create the Booking object
@@ -214,6 +214,8 @@ class SeatBookingView(APIView):
                 category=category,
                 price=price,
                 is_reserved=True,
+                movie_timing= movie_timing,
+                date=date
             )
             seat.save()
             booking.seats.add(seat)
@@ -222,3 +224,24 @@ class SeatBookingView(APIView):
 class BookedSeatView(APIView):
     def get(self, request, movie_id,theater_id,time):
         seats = Seat.objects.filter(screening__movie_id=movie_id)
+
+class BookedSeatView(APIView):
+    def get(self, request, theater_id, movie_id, date, movie_timing):
+
+        queryset = Seat.objects.filter(
+            theater_id=theater_id,
+            movie_id=movie_id,
+            date=date,
+            movie_timing=movie_timing,
+            is_reserved=True  # Filter only reserved seats
+        )
+        
+        # serializer = SeatSerializer(queryset, many=True)
+        seat_numbers = [seat.seat_number for seat in queryset]
+        # You can customize the response data here if needed
+        response_data = {
+            # 'reserved_seats': serializer.data
+            'reserved_seat_numbers': seat_numbers
+        }
+
+        return Response(response_data)

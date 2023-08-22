@@ -5,6 +5,7 @@ import './BookTicket.css'
 import SeatLayout from '../SeatLayout/SeatLayout';
 
 export function BookTicket() {
+   
     const [cinemas, setCinemas] = useState([])
     // const cinemans = [];
     console.log('Ticket plan loaded')

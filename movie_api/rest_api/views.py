@@ -172,22 +172,22 @@ class GetTheaterDetailsViews(APIView):
 
 
 
-class AddMovieToTheaterAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        movie_id = request.data.get('movie_id')
-        theater_id = request.data.get('theater_id')        
-        try:
-            movie = Movie.objects.get(id=movie_id)
-            theater = Theater.objects.get(id=theater_id)
-        except Movie.DoesNotExist:
-            return Response({"error": "Movie not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Theater.DoesNotExist:
-            return Response({"error": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)        
-        theater.movie = movie
-        theater.save()        
-        return Response({
-            "message": f"Movie '{movie.title}' added to theater '{theater.name}'"
-        }, status=status.HTTP_201_CREATED)
+# class AddMovieToTheaterAPIView(APIView):
+#     def post(self, request, *args, **kwargs):
+#         movie_id = request.data.get('movie_id')
+#         theater_id = request.data.get('theater_id')        
+#         try:
+#             movie = Movie.objects.get(id=movie_id)
+#             theater = Theater.objects.get(id=theater_id)
+#         except Movie.DoesNotExist:
+#             return Response({"error": "Movie not found"}, status=status.HTTP_404_NOT_FOUND)
+#         except Theater.DoesNotExist:
+#             return Response({"error": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)        
+#         theater.movie = movie
+#         theater.save()        
+#         return Response({
+#             "message": f"Movie '{movie.title}' added to theater '{theater.name}'"
+#         }, status=status.HTTP_201_CREATED)
     
 
 class SeatBookingView(APIView):
@@ -198,6 +198,8 @@ class SeatBookingView(APIView):
         category = data.get('category')
         movie_id = data.get('movie')
         price = data.get('price')
+        movie_timing=data.get('time')
+        date=data.get('date')
 
         # Create the Booking object
         booking = Booking(user=request.user, movie_id=movie_id,total_cost=len(seats_data)*price)
@@ -217,3 +219,6 @@ class SeatBookingView(APIView):
             booking.seats.add(seat)
 
         return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)
+class BookedSeatView(APIView):
+    def get(self, request, movie_id,theater_id,time):
+        seats = Seat.objects.filter(screening__movie_id=movie_id)

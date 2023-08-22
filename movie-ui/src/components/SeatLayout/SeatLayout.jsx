@@ -57,6 +57,8 @@ function SeatLayout(props) {
         theater: theaterdetails.id,
         seats: selectedSeats,
         movie: theaterdetails.movie,
+        time:theaterdetails.movie_timing,
+        date:theaterdetails.movie_date,
         is_reserved: true,
         category: 'silver',
         price: 200.00,

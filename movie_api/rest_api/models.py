@@ -50,8 +50,10 @@ class Theater(models.Model):
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     pincode = models.CharField(max_length=10)
-    movie_timing = models.CharField(max_length=10)
-
+    first_show= models.TimeField()
+    second_show= models.TimeField()
+    third_show= models.TimeField()
+    date=models.DateField() 
     def __str__(self):
         return self.name
 
@@ -63,6 +65,8 @@ class Seat(models.Model):
     is_reserved = models.BooleanField(default=False)
     category = models.CharField(max_length=200)
     price = models.FloatField(default=0.00)
+    date = models.CharField(max_length=10)
+    movie_timing = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return f"{self.theater.name} - {self.movie.title} - Seat {self.seat_number}"

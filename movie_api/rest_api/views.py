@@ -10,6 +10,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 import json
 import random
 import copy
@@ -168,29 +169,10 @@ class GetTheaterDetailsViews(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Movie.DoesNotExist:
             return Response({"detail": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-
-
-
-# class AddMovieToTheaterAPIView(APIView):
-#     def post(self, request, *args, **kwargs):
-#         movie_id = request.data.get('movie_id')
-#         theater_id = request.data.get('theater_id')        
-#         try:
-#             movie = Movie.objects.get(id=movie_id)
-#             theater = Theater.objects.get(id=theater_id)
-#         except Movie.DoesNotExist:
-#             return Response({"error": "Movie not found"}, status=status.HTTP_404_NOT_FOUND)
-#         except Theater.DoesNotExist:
-#             return Response({"error": "Theater not found"}, status=status.HTTP_404_NOT_FOUND)        
-#         theater.movie = movie
-#         theater.save()        
-#         return Response({
-#             "message": f"Movie '{movie.title}' added to theater '{theater.name}'"
-#         }, status=status.HTTP_201_CREATED)
-    
+          
 
 class SeatBookingView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         data = request.data
         theater_id = data.get('theater')
@@ -200,7 +182,7 @@ class SeatBookingView(APIView):
         price = data.get('price')
         movie_timing=data.get('movie_timing')
         date=data.get('date')
-
+        
         # Create the Booking object
         booking = Booking(user=request.user, movie_id=movie_id,total_cost=len(seats_data)*price)
         booking.save()
@@ -215,15 +197,14 @@ class SeatBookingView(APIView):
                 price=price,
                 is_reserved=True,
                 movie_timing= movie_timing,
-                date=date
+                date=date,
+                user=request.user
             )
             seat.save()
             booking.seats.add(seat)
 
         return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)
-# class BookedSeatView(APIView):
-#     def get(self, request, movie_id,theater_id,time):
-#         seats = Seat.objects.filter(screening__movie_id=movie_id)
+
 
 class BookedSeatView(APIView):
     def get(self, request, theater_id, movie_id, date, movie_timing):
@@ -245,3 +226,45 @@ class BookedSeatView(APIView):
         }
 
         return Response(response_data)
+    
+# class BookingDetailsView(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def get(self, request):
+        
+#         currdate=datetime.now().date()
+#         date= request.GET.get('date',currdate)
+#         user=request.user
+#         userDetail=User.objects.filter(id=user)
+#         ticketDetails=Seat.objects.filter(user_id=user,date=date)
+#         theaterDetails=Theater.objects.filter(theater_id=ticketDetails.theater_id)
+
+class BookingDetailsView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        date_param = request.GET.get('date', None)
+        if date_param is None:
+            seats = Seat.objects.filter(user_id=user)
+        else:
+            seats = Seat.objects.filter(user_id=user, date=date_param).values(
+                    'id','theater_id','movie_id','seat_number','is_reserved','category','price','date','movie_timing','user_id')
+        user_serializer = UserSerializer(user).data
+        seat_serializer = SeatSerializer(seats, many=True).data
+        theater_ids = seats.values_list('theater_id',flat=True).distinct()
+        theater_id_list = list(theater_ids)
+        print(theater_ids)
+        theaters = Theater.objects.filter(id=theater_ids[0])
+        theater_serializer = TheaterSerializer(theaters, many=True).data
+        # booking=Booking.objects.filter(user_id=user,movie_id=)
+        # print(booking)
+        response_data = {
+            'user_details': user_serializer,
+            'seat_details': seat_serializer,
+            'theater_details': theater_serializer,
+        }
+        return Response(response_data)
+    
+
+
+
+

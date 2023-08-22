@@ -67,6 +67,7 @@ class Seat(models.Model):
     price = models.FloatField(default=0.00)
     date = models.CharField(max_length=10)
     movie_timing = models.CharField(max_length=10, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.theater.name} - {self.movie.title} - Seat {self.seat_number}"

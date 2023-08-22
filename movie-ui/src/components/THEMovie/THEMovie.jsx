@@ -73,7 +73,15 @@ function MovieThUpload({ setShowModal2 }) {
             .then((res) => {
                 if (res.status === 201) {
                     alert("Successful Uploaded");
-                    document.getElementById("movie-form").reset();
+                    setSelectedMovie('');
+                    setName('');
+                    setAddress('');
+                    setCity('');
+                    setPincode('');
+                    setMovieDate('');
+                    setFirstShow('');
+                    setSecondShow('');
+                    setThirdShow('');
                     navigate("/dashboard"); // Redirect to another page after successful upload
                 } else if (res.status === 401) {
                     console.log("Unauthorized request");
@@ -169,10 +177,11 @@ function MovieThUpload({ setShowModal2 }) {
                             onChange={(e) => setFirstShow(e.target.value)}
                             style={{ color: 'black' }}
                         >
-                            <option style={{ color: 'black' }} value="">Select Time</option>
+                            <option style={{ color: 'black' }} value=''>Select Time</option>
                             <option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>
                             <option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>
                             <option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>
+                            <option style={{ color: 'black' }} value="00:00:00.000000">No Show</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -187,6 +196,7 @@ function MovieThUpload({ setShowModal2 }) {
                             <option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>
                             <option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>
                             <option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>
+                            <option style={{ color: 'black' }} value="00:00:00.000000">No Show</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -201,6 +211,7 @@ function MovieThUpload({ setShowModal2 }) {
                             <option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>
                             <option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>
                             <option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>
+                            <option style={{ color: 'black' }} value="00:00:00.000000">No Show</option>
                         </select>
                     </div>
                     <div className="footer">

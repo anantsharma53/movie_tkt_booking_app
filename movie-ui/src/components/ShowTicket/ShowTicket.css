@@ -1,0 +1,10 @@
+.userLogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+}
+.table {
+    background-color: aliceblue;
+
+}

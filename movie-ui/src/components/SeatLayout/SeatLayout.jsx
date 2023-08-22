@@ -17,6 +17,27 @@ function SeatLayout(props) {
   const [paymentKey, setPaymentKey] = useState('');
   const seatprice = 150;
   const totalPrice = seatprice * (selectedSeats.length);
+  const [showtime, setShowtime] = useState([]);    
+    useEffect(() => {
+        // Fetch genres from the API
+        fetch(`http://127.0.0.1:8000/api/movies/showtime/${3}/`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },}
+        )
+            .then((response) => response.json())
+            .then((data) => {
+              setShowtime(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching genres:", error);
+            });
+    }, [theaterdetails]);
+   
+    console.log(showtime)
   const handleSeatClick = (seatNumber) => {
     // Toggle seat selection
     if (selectedSeats.includes(seatNumber)) {
@@ -104,7 +125,7 @@ function SeatLayout(props) {
         .then((response) => {
           if (response.status === 201) {
             // Booking successful, you can handle this case as needed (e.g., show a confirmation message)
-            navigate('/getticket/')
+            navigate('/getticket/');
             console.log('Seats booked successfully');
           } else if (response.status === 400) {
             // Handle validation errors or seat availability errors
@@ -156,9 +177,9 @@ function SeatLayout(props) {
           style={{ color: 'black' }}
         >
           <option style={{ color: 'black' }} value="">Select Show Time</option>
-          <option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>
-          <option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>
-          <option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>
+          {showtime.first_show!== "00:00:00" ?<option style={{ color: 'black' }} value="09:00:00.000000">09:00 AM</option>: null}
+          {showtime.second_show!== "00:00:00" ?<option style={{ color: 'black' }} value="12:00:00.000000">12:00 PM</option>: null}
+          {showtime.third_show!== "00:00:00" ?<option style={{ color: 'black' }} value="15:00:00.000000">03:00 PM</option>: null}
         </select>
       </div>
       <div className="seat-layout">

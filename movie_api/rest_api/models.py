@@ -50,9 +50,9 @@ class Theater(models.Model):
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     pincode = models.CharField(max_length=10)
-    first_show= models.TimeField()
-    second_show= models.TimeField()
-    third_show= models.TimeField()
+    first_show= models.TimeField(blank=True, null=True)
+    second_show= models.TimeField(blank=True, null=True)
+    third_show= models.TimeField(blank=True, null=True)
     date=models.DateField() 
     def __str__(self):
         return self.name

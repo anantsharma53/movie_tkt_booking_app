@@ -1,0 +1,21 @@
+.MDBContainer{
+    margin-left: 20px;
+    width: 100vh;
+}
+.my-custom-container {
+    
+    /* padding: 20px; */
+    margin-left: 10px;
+    
+    /* Add more custom styles here */
+  }
+  .btnBookTickets {
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  

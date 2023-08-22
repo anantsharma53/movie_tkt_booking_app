@@ -143,6 +143,43 @@ class UniqueLanguagesAPI(APIView):
         languages = Movie.objects.values_list('language', flat=True).distinct()
         language_list=list(languages)
         return JsonResponse(language_list, status=status.HTTP_200_OK,safe=False)
+
+# class AvailableShowTimes(APIView):
+#     def get(self, request, movie_id):
+#         try:
+#             theaters = Theater.objects.filter(movie_id=movie_id)
+#             available_show_times = []
+
+#             for theater in theaters:
+#                 available_show_times.append({
+#                     'theater_name': theater.name,
+#                     'first_show': theater.first_show,
+#                     'second_show': theater.second_show,
+#                     'third_show': theater.third_show,
+#                 })
+
+#             return Response(available_show_times, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+class AvailableShowTimes(APIView):
+    def get(self, request, movie_id):
+        try:
+            theaters = Theater.objects.filter(movie_id=movie_id)
+            available_show_times = {}
+
+            for theater in theaters:
+                available_show_times ={
+                    'first_show': theater.first_show,
+                    'second_show': theater.second_show,
+                    'third_show': theater.third_show,
+                }
+
+            return Response(available_show_times, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     
 class TheaterCreateView(APIView):
     def post(self, request, movie_id):

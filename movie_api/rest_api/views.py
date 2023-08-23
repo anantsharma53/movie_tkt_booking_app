@@ -68,7 +68,7 @@ class UserUpdatView(APIView):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
 class AddMovieAPIView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticated & IsAdminUser]
     def post(self, request):
         serializer = MovieSerializer(data=request.data)
         if serializer.is_valid():
@@ -89,7 +89,7 @@ class DeleteMovieAPIView(APIView):
             return Response({'message': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GetMovieViews(APIView):
-    permission_classes=[IsAuthenticated]    
+    permission_classes=[IsAuthenticated & IsAdminUser]   
     def get(self, request):
         page_number =request.GET.get('page',1)
         movies=Movie.objects.all().order_by("id")

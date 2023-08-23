@@ -7,6 +7,7 @@ class UserManager(BaseUserManager):
             raise ValueError("Username sholud be provided")
         extra_fields.setdefault('is_staff',False)
         extra_fields.setdefault('is_superuser',False)
+        extra_fields.setdefault('IsAdminUser',False)
         user=self.model(username=username,**extra_fields)
         user.set_password(password)
         user.save()
@@ -25,6 +26,7 @@ class User(AbstractBaseUser):
     password=models.CharField(max_length=100)
     is_staff=models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
+    IsAdminUser=models.BooleanField(default=False)
 
     
     USERNAME_FIELD='username'

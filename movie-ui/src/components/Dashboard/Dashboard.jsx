@@ -93,6 +93,7 @@ function Dashboard() {
         })
         .then(response => {
             if (response.status === 204) {
+                movieList(currentPage);
                 console.error('deleting done:', response.status);
             } else {
                 // Handle other response statuses here
@@ -126,17 +127,7 @@ function Dashboard() {
 
                     </div>
                     <div className="dashboardContainer">
-
-
                         <Profile />
-
-                        {/* <div className="userDetail">
-                            <h2 className="welcomeText">Your Profile Details</h2>
-                            <h2 className="welcomeUserText">Name: {user.name}</h2>
-                            <h2 className="welcomeUserText">Username: {user.username}</h2>
-                            <h2 className="welcomeUserText">Email: {user.email}</h2>
-                            <h2 className="welcomeUserText">Mobile Number: {user.mobile_number}</h2>
-                        </div> */}
                         <div>
                             {isSuperUser &&
                                 (<div class="container mt-5 table">

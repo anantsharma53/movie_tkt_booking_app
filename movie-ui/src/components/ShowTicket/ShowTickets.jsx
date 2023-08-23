@@ -7,8 +7,7 @@ function ShowTicket() {
     const token = localStorage.getItem('token')
     const[data,setData]=useState([])
     const [loading, setLoading] = useState(true);
-
-   
+    const[theaterDetails,setTheaterDetails]=useState([])
     useEffect(() => {
         
         // Define the URL of the API
@@ -37,40 +36,23 @@ function ShowTicket() {
       }, [token]);
     console.log(data);
 
-    const handleDeleteSeat = (movieId, seatNumber, date) => {
-        const data = {
-          movie_id: movieId,
-          seat_number: seatNumber,
-          date: date,
-        };
-    
-        fetch('http://127.0.0.1:8000/api/delete-seat/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Include your authentication token here
-          },
-          body: JSON.stringify(data),
-        })
-          .then((response) => {
-            if (response.status === 200) {
-              return response.json();
-            } else {
-              throw new Error('Seat data not found');
-            }
-          })
+     function getTheater(movie){
+
+      fetch(`http://127.0.0.1:8000/api/movie/the/${movie}`)
+          .then((res) => res.json())
           .then((data) => {
-            // setMessage(data.message);
+            setTheaterDetails(data)
           })
-          .catch((error) => {
-            // setMessage(error.message);
-          });
-      };
+      }
+console.log(theaterDetails)
+
+    
+    
    
 
     
 
-    function SeatDetails({ seatDetails,theaterDetails }) {
+    function SeatDetails({ seatDetails }) {
         return (
                         <table class="container table user-list tablecolour">
                             <thead>
@@ -88,7 +70,7 @@ function ShowTicket() {
                                 {seatDetails
                                     &&
                                     seatDetails.map((seat, index) => (
-
+                                      
                                         <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{seat.seat_number} <br /></td>
@@ -97,51 +79,23 @@ function ShowTicket() {
                                             <td>{seat.date}</td>
                                             <td>{seat.movie_timing}</td>
                                             <td style={{ width: '20%' }}>
-                                                <a href="#" class="table-link">
+                                                <a href="#" class="table-link" onClick={() => getTheater(seat.movie)}>
                                                     <span class="fa-stack">
-                                                        <img src="https://www.freeiconspng.com/thumbs/laser-icon/hardware-laser-printer-icon-32.png" 
+                                                        <img  src="https://www.freeiconspng.com/thumbs/laser-icon/hardware-laser-printer-icon-32.png" 
                                                         style={{width:'50px',height:'50px'}}/>
                                                     </span>
                                                 </a>
-                                                <a href="#" class="table-link">
-                                                    <span class="fa-stack">
-                                                    <img onClick={handleDeleteSeat(seat.movie, seat.seat_number, seat.date)} src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg" 
-                                                        style={{width:'70px',height:'70px'}}/>
-                                                    </span>
-                                                </a>
+                                                
                                                 
                                             </td>                                          
                                         </tr>
-                                    ))}
-                                    
+                                    ))}       
                             </tbody>
                         </table>
         );
     }
 
-    // function TheaterDetails({ theaterDetails }) {
-    //     return (
-    //         <div>
-    //             <h2>Theater Details</h2>
-    //             {theaterDetails.map(theater => (
-    //                 <div key={theater.id}>
-    //                     <p>ID: {theater.id}</p>
-    //                     <p>Name: {theater.name}</p>
-    //                     <p>Address: {theater.address}</p>
-    //                     <p>City: {theater.city}</p>
-    //                     <p>Pincode: {theater.pincode}</p>
-    //                     <p>First Show: {theater.first_show}</p>
-    //                     <p>Second Show: {theater.second_show}</p>
-    //                     <p>Third Show: {theater.third_show}</p>
-    //                     <p>Date: {theater.date}</p>
-    //                 </div>
-    //             ))}
-    //         </div>
-    //     );
-    // }
-    // if (loading) {
-    //     return <div>Loading...</div>;
-    //   }
+
 
 
     return (

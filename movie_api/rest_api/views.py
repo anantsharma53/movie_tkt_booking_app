@@ -75,7 +75,19 @@ class AddMovieAPIView(APIView):
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class DeleteMovieAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, movie_id):
+        try:
+            # Filter movies by id
+            movie = Movie.objects.get(id=movie_id)
+            # Delete the movie
+            movie.delete()
+            return Response({'message': 'Movie deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Movie.DoesNotExist:
+            return Response({'message': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
+
 class GetMovieViews(APIView):
     permission_classes=[IsAuthenticated]    
     def get(self, request):
@@ -223,29 +235,7 @@ class SeatBookingView(APIView):
         return Response({'message': 'Booking created successfully'}, status=status.HTTP_201_CREATED)
 
 
-class DeleteSeatView(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request, format=None):
-        data = request.data
-        print(data)
-        user_id = request.user.id
-        movie_id = data.get('movie_id')  
-        seat_number = data.get('seat_number') 
-        date = data.get('date') 
-       
-        seats=Seat.objects.all()
-        seat_to_delete=seats.filter(seat_number=seat_number)
-        # try:
-        #     seat_to_delete = Seat.objects.filter(
-        #         user_id=user_id,
-        #         movie_id=movie_id,
-        #         seat_number=seat_number,
-        #         date=date
-        #     )
-        seat_to_delete.delete()
-        return Response({'message': 'Seat data deleted successfully'}, status=status.HTTP_200_OK)
-    # except Seat.DoesNotExist:
-    #     return Response({'error': 'Seat data not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 class BookedSeatView(APIView):
@@ -269,16 +259,7 @@ class BookedSeatView(APIView):
 
         return Response(response_data)
     
-# class BookingDetailsView(APIView):
-#     permission_classes = [IsAuthenticated]
-#     def get(self, request):
-        
-#         currdate=datetime.now().date()
-#         date= request.GET.get('date',currdate)
-#         user=request.user
-#         userDetail=User.objects.filter(id=user)
-#         ticketDetails=Seat.objects.filter(user_id=user,date=date)
-#         theaterDetails=Theater.objects.filter(theater_id=ticketDetails.theater_id)
+
 
 class BookingDetailsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -295,7 +276,7 @@ class BookingDetailsView(APIView):
         theater_ids = seats.values_list('theater_id',flat=True).distinct()
         theater_id_list = list(theater_ids)
         print(theater_ids)
-        theaters = Theater.objects.filter(id=theater_ids)
+        theaters = Theater.objects.filter(id=theater_id_list[0])
         theater_serializer = TheaterSerializer(theaters, many=True).data
         # booking=Booking.objects.filter(user_id=user,movie_id=)
         # print(booking)
@@ -305,8 +286,28 @@ class BookingDetailsView(APIView):
             'theater_details': theater_serializer,
         }
         return Response(response_data)
-    
 
 
-
-
+class DeleteSeatView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        data = request.data
+        print(data)
+        user_id = request.user.id
+        movie_id = data.get('movie_id')  
+        seat_number = data.get('seat_number') 
+        date = data.get('date') 
+       
+        seats=Seat.objects.all()
+        seat_to_delete=seats.filter(seat_number=seat_number)
+        # try:
+        #     seat_to_delete = Seat.objects.filter(
+        #         user_id=user_id,
+        #         movie_id=movie_id,
+        #         seat_number=seat_number,
+        #         date=date
+        #     )
+        seat_to_delete.delete()
+        return Response({'message': 'Seat data deleted successfully'}, status=status.HTTP_200_OK)
+    # except Seat.DoesNotExist:
+    #     return Response({'error': 'Seat data not found'}, status=status.HTTP_404_NOT_FOUND)

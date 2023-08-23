@@ -10,7 +10,7 @@ import Home from "../Home/Home";
 import ShowTicket from "../ShowTicket/ShowTickets";
 import Profile from "../Profile/Profile";
 function Dashboard() {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const user = JSON.parse(localStorage.getItem('user_details'));
     const isSuperUser = user && user.is_superuser;
     const token = localStorage.getItem('token')
@@ -25,38 +25,38 @@ function Dashboard() {
         const user = JSON.parse(localStorage.getItem('user_details'));
         const isSuperUser = user && user.is_superuser;
         const token = localStorage.getItem('token')
-        if(token){
-        fetch(`http://127.0.0.1:8000/api/movies/list?page=${pageNumber}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`,
-                },
-            }
+        if (token) {
+            fetch(`http://127.0.0.1:8000/api/movies/list?page=${pageNumber}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
 
-        )
-            .then((res) => res.json())
-            .then((jsonResponse) => {
-                const resultsArray = jsonResponse.results;
-                console.log(resultsArray)
-                setMovie(resultsArray);
-                const numPages = jsonResponse.num_pages;
-                setTotalPages(numPages);
-                // const resultsArray = jsonResponse.results.results;
-                // setUsers(resultsArray);
-                // const numPages = jsonResponse.results.num_pages;
-                // setTotalPages(numPages);
-            })
-            .catch((err) => {
-                console.log(err);
-                setError(err);
-            });
+            )
+                .then((res) => res.json())
+                .then((jsonResponse) => {
+                    const resultsArray = jsonResponse.results;
+                    console.log(resultsArray)
+                    setMovie(resultsArray);
+                    const numPages = jsonResponse.num_pages;
+                    setTotalPages(numPages);
+                    // const resultsArray = jsonResponse.results.results;
+                    // setUsers(resultsArray);
+                    // const numPages = jsonResponse.results.num_pages;
+                    // setTotalPages(numPages);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setError(err);
+                });
+        }
+        else {
+            navigate('/signin')
+        }
+
     }
-    else{
-        navigate('/signin')
-    }
-    
-}
 
 
 
@@ -83,10 +83,29 @@ function Dashboard() {
     const closeModal = () => {
         setShowModal(false);
     };
-
+    function DeleteMovie(id) {
+        fetch(`http://127.0.0.1:8000/api/movies/del/${id}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+        .then(response => {
+            if (response.status === 204) {
+                console.error('deleting done:', response.status);
+            } else {
+                // Handle other response statuses here
+                console.error('Error deleting movie:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting movie:', error);
+        });
+    }
     return (
         <>
-            
+
             {isSuperUser ? (
                 <div>
                     <Navbar />
@@ -109,7 +128,7 @@ function Dashboard() {
                     <div className="dashboardContainer">
 
 
-                    <Profile  />
+                        <Profile />
 
                         {/* <div className="userDetail">
                             <h2 className="welcomeText">Your Profile Details</h2>
@@ -158,32 +177,12 @@ function Dashboard() {
 
                                                                     </td>
 
-                                                                    {
-                                                                        user.is_superuser === true ? <td>Supar Admin</td> :
-                                                                            <td style={{ width: '20%' }}>
-                                                                                <a href="#" class="table-link">
-                                                                                    <span class="fa-stack">
-                                                                                        <i class="fa fa-square fa-stack-2x"></i>
-                                                                                        <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                                                                    </span>
-                                                                                </a>
-                                                                                <a href="#" class="table-link">
-                                                                                    <span class="fa-stack">
-                                                                                        <i class="fa fa-square fa-stack-2x"></i>
-                                                                                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                                                                    </span>
-                                                                                </a>
-                                                                                <a href="#" class="table-link danger">
-                                                                                    <span class="fa-stack">
-                                                                                        <i class="fa fa-square fa-stack-2x"></i>
-                                                                                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                                                    </span>
-                                                                                </a>
-                                                                            </td>
-
-                                                                    }
-
-
+                                                                    <a href="#" class="table-link" onClick={() => DeleteMovie(movies.id)}>
+                                                                        <span class="fa-stack">
+                                                                            <img src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg"
+                                                                                style={{ width: '50px', height: '50px' }} />
+                                                                        </span>
+                                                                    </a>
                                                                 </tr>
                                                             ))}
 
@@ -248,7 +247,7 @@ function Dashboard() {
                     </div>
                 </div>) :
                 (<>
-                   <ShowTicket/>                    
+                    <ShowTicket />
                 </>
 
                 )

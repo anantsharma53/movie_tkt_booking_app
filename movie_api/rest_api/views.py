@@ -67,6 +67,8 @@ class UserUpdatView(APIView):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
+
+
 class AddMovieAPIView(APIView):
     permission_classes=[IsAuthenticated & IsAdminUser]
     def post(self, request):

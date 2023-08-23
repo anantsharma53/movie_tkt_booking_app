@@ -2,12 +2,41 @@
     margin-left: 20px;
     width: 100vh;
 }
-.my-custom-container {
-    
-    /* padding: 20px; */
-    margin-left: 10px;
-    
-    /* Add more custom styles here */
+.profile-header{
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+
+}
+.profileBox{
+  background-color: white !important;
+  border-radius: 5px;
+  width: 500px;
+  height: 250px;
+
+}
+.profile-details{
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+
+}
+.profileUpdateBox{
+  background-color: rgb(231, 162, 115) !important;
+  border-radius: 5px;
+  width: 500px;
+  height: 250px;
+
+}
+.formDisplay{
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+  .user-update{
+    background-color: #eea342;
+    width: 50%;
   }
   .btnupdate {
     margin-top: 10px;

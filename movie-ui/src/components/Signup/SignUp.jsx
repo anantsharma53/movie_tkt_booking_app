@@ -37,7 +37,7 @@ export function Signup() {
     <div className="signupContainer">
       <div className="signupForm">
         <h2 className="welcomeText">WELCOME</h2>
-        <h2 className="welcomeSubText">Ranjan Cinema</h2>
+        <h2 className="welcomeSubText">Movie Tickets</h2>
         <Formik
           initialValues={{
             name: '',
